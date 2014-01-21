@@ -18,8 +18,18 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
-                  'HTML::PullParser' => 0,
-                 },
+        'HTML::PullParser' => 0,
+    },
+    EXE_FILES => [ 'bin/muse-rearrange-footnotes.pl' ],
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Text-Amuse-Preprocessor-*' },
+    META_MERGE => {
+        resources => {
+            repository => 'https://gitorious.org/text-amuse-preprocessor'
+           },
+    },
 );
+
+# Local Variables:
+# cperl-indent-parens-as-block: t
+# End:
