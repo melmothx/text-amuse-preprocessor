@@ -32,7 +32,7 @@ sub linkify_filter {
 }
 
 
-sub typography_filter_common {
+sub _typography_filter_common {
   my $l = shift;
   $l =~ s/ﬁ/fi/g ;
   $l =~ s/ﬂ/fl/g ;
@@ -44,7 +44,7 @@ sub typography_filter_common {
 }
 
 
-sub typography_filter_en {
+sub _typography_filter_en {
   my $l = shift;
   # then the quotes
   # ascii style
@@ -75,7 +75,7 @@ sub typography_filter_en {
   return $l;
 }
 
-sub typography_filter_es {
+sub _typography_filter_es {
   my $l = shift;
 
   # em-dash —
@@ -127,7 +127,7 @@ sub typography_filter_es {
 }
 
 
-sub typography_filter_fi {
+sub _typography_filter_fi {
   my $l = shift;
   $l =~ s/"/\x{201d}/g;
   $l =~ s/'/\x{2019}/g;
@@ -135,7 +135,7 @@ sub typography_filter_fi {
   return $l;
 }
 
-sub typography_filter_sr {
+sub _typography_filter_sr {
   my $l = shift;
   $l =~ s/(''|")\b/\x{201e}/g ;
   $l =~ s/(?<=\s)(''|")/\x{201e}/gs;
@@ -146,7 +146,7 @@ sub typography_filter_sr {
   return $l;
 }
 
-sub typography_filter_hr {
+sub _typography_filter_hr {
   my $l = shift;
   $l =~ s/(''|")\b/\x{201e}/g ;
   $l =~ s/(?<=\s)(''|")/\x{201e}/gs;
@@ -158,7 +158,7 @@ sub typography_filter_hr {
 }
 
 
-sub typography_filter_ru {
+sub _typography_filter_ru {
   my $l = shift;
   $l =~ s/(?<=\s)(''|")/«/gs;
   $l =~ s/^(''|")/«/gm;
@@ -177,18 +177,18 @@ sub typography_filter_ru {
 
 
 my $lang_filters = {
-		    en => \&typography_filter_en,
-		    fi => \&typography_filter_fi,
-		    hr => \&typography_filter_hr,
-		    sr => \&typography_filter_sr,
-		    ru => \&typography_filter_ru,
-		    es => \&typography_filter_es,
+		    en => \&_typography_filter_en,
+		    fi => \&_typography_filter_fi,
+		    hr => \&_typography_filter_hr,
+		    sr => \&_typography_filter_sr,
+		    ru => \&_typography_filter_ru,
+		    es => \&_typography_filter_es,
 		   };
 
 sub typography_filter {
   my $lang = $_[0];
   my $text = " " . $_[1] . " ";
-  $text = typography_filter_common($text);
+  $text = _typography_filter_common($text);
   if ($lang and exists $lang_filters->{$lang}) {
     $text = $lang_filters->{$lang}->($text);
   }
