@@ -141,14 +141,14 @@ sub html_to_muse {
       my $attr = shift @$token;
       # see if processing of span or font are needed
       if (($tag eq 'span') or ($tag eq 'font')) {
-	$tag = span_process_attr($attr);
+	$tag = _span_process_attr($attr);
 	push @spanpile, $tag;
       }
       elsif (($tag eq "ol") or ($tag eq "ul")) {
 	push @lists, $tag;
       }
       elsif (($tag eq 'p') or ($tag eq 'div')) {
-	$tag = pars_process_attr($tag, $attr);
+	$tag = _pars_process_attr($tag, $attr);
 	push @parspile, $tag;
       }
       # see if we want to skip it.
@@ -238,7 +238,7 @@ sub html_to_muse {
   return $parsed;
 }
 
-sub span_process_attr {
+sub _span_process_attr {
   my $attr = shift;
   my $tag;
   my @attrsvalues = values %$attr;
@@ -254,7 +254,7 @@ sub span_process_attr {
   return $tag;
 }
 
-sub pars_process_attr {
+sub _pars_process_attr {
   my ($tag, $attr) = @_;
 # warn Dumper($attr);
   if (my $style = $attr->{style}) {
