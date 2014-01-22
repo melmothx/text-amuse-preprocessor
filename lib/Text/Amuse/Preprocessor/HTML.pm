@@ -17,6 +17,26 @@ our @EXPORT_OK = qw( html_to_muse );
 
 our $VERSION = '0.01';
 
+=head1 NAME
+
+Text::Amuse::Preprocessor::HTML - HTML importer
+
+=head1 DESCRIPTION
+
+This module tries its best to convert the HTML into an acceptable
+Muse string. It's not perfect, though, and some manual adjustment is
+needed if there are tables or complicated structures.
+
+=head1 SYNOPSIS
+
+This module by itself doesn't do anything, but the bundled module do.
+
+  use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
+  my $html = '<p>Your text here... &amp; &quot; &ograve;</p>'
+  my $muse = html_to_muse($html);
+
+=cut
+
 use HTML::PullParser;
 
 my %microshitreplace = (
@@ -87,6 +107,15 @@ my %preserved = (
 		 "right"  => ["\n\n<right>\n", "\n</right>\n\n"],
 		 
 );
+
+=head1 FUNCTIONS
+
+=head2 html_to_muse($html_decoded_text)
+
+The first argument must be a string with the HTML text. Returns the
+L<Text::Amuse> formatted body.
+
+=cut
 
 sub html_to_muse {
   my ($rawtext, $debug) = @_;
@@ -276,46 +305,16 @@ sub _pars_process_attr {
   return $tag;
 }
 
-
-# Preloaded methods go here.
-
 1;
-__END__
-# Below is stub documentation for your module. You'd better edit it!
 
-=head1 NAME
 
-Text::Muse::HTML::Importer - Perl extension to convert raw HTML to Muse
+=head1 AUTHOR, LICENSE, ETC.,
 
-=head1 SYNOPSIS
-
-  use Text::Muse::HTML::Importer qw/html_import_to_muse/
-  my $muse = html_import_to_muse($htmlstring)
-
-=head1 DESCRIPTION
-
-  This module tries its best to convert the HTML into an acceptable
-  Muse string. 
-
-=head2 EXPORT
-
-None by default.
-
-=head1 SEE ALSO
-
-Text::Muse
-
-=head1 AUTHOR
-
-marco@theanarchistlibrary.org
-
-=head1 COPYRIGHT AND LICENSE
-
-No Copyright
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.10.1 or,
-at your option, any later version of Perl 5 you may have available.
-
+See L<Text::Amuse::Preprocessor>
 
 =cut
+
+# Local Variables:
+# tab-width: 8
+# cperl-indent-level: 2
+# End:
