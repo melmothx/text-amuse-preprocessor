@@ -200,13 +200,15 @@ sub typography_filter {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
-Text::Muse::Preprocessor::Typography - Perl extension for pre-processing of Text::Amuse files
+Text::Amuse::Preprocessor::Typography - Perl extension for pre-processing of Text::Amuse files
 
 =head1 SYNOPSIS
 
-  use Text::Muse::Preprocessor::Typography qw/typography_filter/;
+  use Text::Amuse::Preprocessor::Typography qw/typography_filter/;
   my $cleanedtext = typography_filter($lang, $text)
   
 
@@ -215,9 +217,30 @@ Text::Muse::Preprocessor::Typography - Perl extension for pre-processing of Text
 Common routines to filter the input files, fixing typography and
 language-specific rules. All the text is assumed to be already decoded.
 
-=head2 EXPORT
+=head1 FUNCTIONS
 
-None by default.
+=head2 linkify_filter($string)
+
+Detect and replace the bare links with the proper markup, as
+[[http://domain.org/my/url/and_params?a=1&b=c][domain.org]]
+
+It's a bit opinionated to hide the full url and show only the domain.
+Anyway, it's a preprocessing filter and the most important thing is
+not to loose pieces. And we don't, because the full url is still
+there. Anyway, long urls are a pain to display and to typeset, so the
+domain is a sensible choise. The user can anyway change this. It's
+just an helper to avoid boring tasks, nothing more.
+
+Returns the adjusted string.
+
+=head2 typography_filter($lang, $string)
+
+Perform the smart replacement of single quotes, double quotes, dashes
+and, in some cases, the superscript for things like 2nd, 13th, etc.
+
+The languages supported are C<en>, C<fil>, C<hr>, C<sr>, C<ru>, C<es>.
+
+Returns the adjusted string.
 
 
 =head1 SEE ALSO
