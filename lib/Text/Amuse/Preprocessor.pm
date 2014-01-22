@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 
 =head1 NAME
 
-Text::Amuse::Preprocessor - The great new Text::Amuse::Preprocessor!
+Text::Amuse::Preprocessor - Helpers for Text::Amuse document formatting.
 
 =head1 VERSION
 
@@ -19,35 +19,16 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+This module by itself doesn't do anything, but the bundled module do.
 
-Perhaps a little code snippet.
+  use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
+  my $html = '<p>Your text here... &amp; &quot; &ograve;</p>'
+  my $muse = html_to_muse($html);
 
-    use Text::Amuse::Preprocessor;
-
-    my $foo = Text::Amuse::Preprocessor->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
+  use Text::Amuse::Preprocessor::Typography qw/typography_filter
+                                               linkify_filter/;
+  $muse = typography_filter(en => $muse);
+  $muse = linkify_filter($muse);
 
 =head1 AUTHOR
 
@@ -55,12 +36,9 @@ Marco Pessotto, C<< <melmothx at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-text-amuse-preprocessor at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Text-Amuse-Preprocessor>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
+Please report any bugs or feature requests to the author's email. If
+you find a bug, please provide a minimal muse file which reproduces
+the problem (so I can add it to the test suite).
 
 =head1 SUPPORT
 
@@ -68,36 +46,17 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Text::Amuse::Preprocessor
 
+Repository available at Gitorious:
+L<https://gitorious.org/text-amuse-preprocessor>
 
-You can also look for information at:
+=head1 SEE ALSO
 
-=over 4
+The original documentation for the Emacs Muse markup can be found at:
+L<http://mwolson.org/static/doc/muse/Markup-Rules.html>
 
-=item * RT: CPAN's request tracker (report bugs here)
+The parser itself is L<Text::Amuse>.
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Text-Amuse-Preprocessor>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Text-Amuse-Preprocessor>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Text-Amuse-Preprocessor>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Text-Amuse-Preprocessor/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2014 Marco Pessotto.
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
