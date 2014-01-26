@@ -1,13 +1,59 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Pod::Usage;
+
+=head1 NAME
+
+muse-rearrange-footnotes.pl
+
+=head1 DESCRIPTION
+
+This script takes a file as argument, and rearrange the footnotes
+numbering, barfing if the footnotes found in the body don't match the
+footnotes themselves. This is handy if you inserted footnotes at
+random position, or if the footnotes are numbered by section or
+chapter.
+
+Example input file content:
+
+  This [1] is a text [1] with three footnotes [4]
+
+  [1] first
+  
+  [1] second
+  
+  [2] third
+
+
+Output in file with C<.fixed> extension:
+
+  This [1] is a text [2] with three footnotes [3]
+
+  [1] first
+  
+  [2] second
+  
+  [3] third
+  
+The original file is never overwritten.
+
+=head1 SYNOPSIS
+
+  muse-rearrange-footnotes.pl file.muse
+
+=head1 SEE ALSO
+
+L<Text::Amuse::Preprocessing>
+
+=cut
 
 my $filename = shift;
 
-die "Please pass a file.muse as argument\n" unless $filename;
+die pod2usage("Please pass a file.muse as argument\n") unless $filename;
 
-die "$filename doesn't exist\n"      unless -e $filename;
-die "$filename is not a text file\n" unless -T $filename;
+die pod2usage("$filename doesn't exist\n")      unless -e $filename;
+die pod2usage("$filename is not a text file\n") unless -T $filename;
 
 my $outputfile = $filename . ".fixed" ; 
 print "Processing $filename, I'll output on $outputfile\n Please double check the result\n";
