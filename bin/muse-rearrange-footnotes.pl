@@ -44,7 +44,7 @@ The original file is never overwritten.
 
 =head1 SEE ALSO
 
-L<Text::Amuse::Preprocessing>
+L<Text::Amuse::Preprocessor>
 
 =cut
 
