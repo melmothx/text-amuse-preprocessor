@@ -238,7 +238,7 @@ Returns the adjusted string.
 Perform the smart replacement of single quotes, double quotes, dashes
 and, in some cases, the superscript for things like 2nd, 13th, etc.
 
-The languages supported are C<en>, C<fil>, C<hr>, C<sr>, C<ru>, C<es>.
+The languages supported are C<en>, C<fi>, C<hr>, C<sr>, C<ru>, C<es>.
 
 Returns the adjusted string.
 
