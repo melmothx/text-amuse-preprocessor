@@ -19,7 +19,7 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-This module by itself doesn't do anything, but the bundled module do.
+This module by itself doesn't do anything, but the bundled modules do.
 
   use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
   my $html = '<p>Your text here... &amp; &quot; &ograve;</p>'

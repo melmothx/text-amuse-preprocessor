@@ -29,8 +29,6 @@ needed if there are tables or complicated structures.
 
 =head1 SYNOPSIS
 
-This module by itself doesn't do anything, but the bundled module do.
-
   use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
   my $html = '<p>Your text here... &amp; &quot; &ograve;</p>'
   my $muse = html_to_muse($html);
@@ -112,8 +110,8 @@ my %preserved = (
 
 =head2 html_to_muse($html_decoded_text)
 
-The first argument must be a string with the HTML text. Returns the
-L<Text::Amuse> formatted body.
+The first argument must be a decoded string with the HTML text.
+Returns the L<Text::Amuse> formatted body.
 
 =cut
 
