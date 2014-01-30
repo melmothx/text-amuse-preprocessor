@@ -174,31 +174,72 @@ sub _typography_filter_ru {
   $l =~ s/(\. ){2,3}\./.../g;
 
 
-  # non-breaking space insertion
+  # NON-BREAKING SPACE INSERTIONS
+
+  # before em dash (—) and en dash (−)
   $l =~ s/ (\x{2013}|\x{2014}|\x{2212})/\x{a0}$1/g;
 
+  # space before, but only if there is a number, otherwise doesn't
+  # make sense.
+
+  $l =~ s/(?<=\d)
+          [ ]+ # white space
+          (
+              # months
+              января | февраля | марта    | апреля  | мая    | июня    |
+              июля   | августа | сентября | октября | ноября | декабря |
+
+              # units
+              г|кг|мм|дм|см|м|км|л|В|А|ВТ|W|°C
+          )
+          \b # word boundary
+         /\x{a0}$1/gsx;
+  
   # space after:
-  $l =~ s/(?<=\W)(
-              а|а,|в|и|и,|к|о|с|у|с\.|т\.|п\.|ч\.|
-              не|ни|на|ну|ну,|от|из|за|да|да,|но|но,|по|до|во|со|ко|
-              та|ту|то|те|см\.|Не|Ни|На|Ну|Ну,|
-              Я|я|К|к|
-              От|Об|Из|За|Да|Да,|Но|Но,|По|До|
-              Во|Со|Ко|Та|Ту|То|Те|См\.|Им\.|Об)\s+
+  $l =~ s/\b # start with a word boundary
+          ( 
+              # prepositions
+              в|к|о|с|у|
+              В|K|О|С|У|
+              на|от|об|из|за|по|до|во|та|ту|то|те|ко|со|
+              На|От|Об|Из|За|По|До|Во|Со|Ко|Та|Ту|То|Те|
+
+              # conjuctions
+              а |а,|
+              и |и,|
+              но|но,|
+              Но|Но,|
+
+              # obuiquitous "da"
+              да|да,|Да|Да,|
+
+              # particles with space after
+              не|ни|
+              Не|Ни|
+
+              # interjections, space after
+              ну|ну,|
+              Ну|Ну,|
+
+              # abbreviations
+              с\.|ч.|
+              см\.|См\.|
+              т\.|п\.
+          )
+          [ ]+ # white space
+          (?=\S) # and look ahead for something that is not a white
+                 # space or end of line
          /$1\x{a0}/gsx;
 
-  # space at the beginning of sentence. Unclear if needed
-  $l =~ s/(\.\s+)(О|K)\s+/$1$2\x{a0}/s;
-  $l =~ s/(\n)(О|K)\s+/$1$2\x{a0}/s;
 
   # and a space before
-  $l =~ s/\ (
-               б|ж|ли|же|ль|бы|бы,|же,|
-               г|кг|мм|дм|см|м|км|л|В|А|ВТ|W|°C|января|
-               февраля|марта|апреля|мая|июня|июля|августа|
-               сентября|октября|ноября|декабря
-           )
-           (?=\W)
+  $l =~ s/(?<=\S) # look behind for something that is not \n
+          [ ]+ # one or more space
+          (
+              # particles
+              б|ж|ли|же|ль|бы|бы,|же,
+          )
+          (?=\s) # white space follows
          /\x{a0}$1/gsx;
 
 
