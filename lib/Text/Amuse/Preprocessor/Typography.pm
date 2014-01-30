@@ -239,7 +239,7 @@ sub _typography_filter_ru {
               # particles
               б|ж|ли|же|ль|бы|бы,|же,
           )
-          (?=\s) # white space follows
+          (?=[\W]) # white space follows or something that is not a word
          /\x{a0}$1/gsx;
 
 
