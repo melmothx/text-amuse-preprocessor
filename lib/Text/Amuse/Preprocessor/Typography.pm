@@ -12,7 +12,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT_OK = qw/typography_filter linkify_filter/;
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 sub linkify_filter {
   my $l = shift;
