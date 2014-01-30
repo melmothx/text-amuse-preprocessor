@@ -313,23 +313,8 @@ The languages supported are C<en>, C<fi>, C<hr>, C<sr>, C<ru>, C<es>.
 
 Returns the adjusted string.
 
-
 =head1 SEE ALSO
 
-L<Text::Amuse>
-
-The Muse homepage: L<http://mwolson.org/projects/EmacsMuse.html>
-
-The Anarchist Library project: L<http://theanarchistlibrary.org>
-
-=head1 AUTHOR
-
-Marco Pessotto, marco@theanarchistlibrary.org
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.10.1 or,
-at your option, any later version of Perl 5 you may have available.
+L<Text::Amuse::Preprocessor>
 
 =cut
