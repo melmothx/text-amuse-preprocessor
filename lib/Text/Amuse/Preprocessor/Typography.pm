@@ -316,13 +316,11 @@ Returns the adjusted string.
 
 =head1 SEE ALSO
 
-Text::Muse
-Text::Muse::Formats
-Text::Muse::EPUB
+L<Text::Amuse>
 
-The Muse homepage: http://mwolson.org/projects/EmacsMuse.html
+The Muse homepage: L<http://mwolson.org/projects/EmacsMuse.html>
 
-The Anarchist Library project: http://theanarchistlibrary.org
+The Anarchist Library project: L<http://theanarchistlibrary.org>
 
 =head1 AUTHOR
 
