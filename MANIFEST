@@ -12,4 +12,5 @@ t/html.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
+t/russian.t
 t/typography.t
