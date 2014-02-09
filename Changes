@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.04 2014-02-09
+ - Fixed "pre" tag parsing
+
 0.03 2014-01-30
  - Fixed Changes and versions
 

@@ -15,7 +15,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT_OK = qw( html_to_muse );
 
-our $VERSION = '0.01';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -80,7 +80,7 @@ my %preserved = (
 			 },
 		 "code" => ["<code>", "</code>"],
 		 "a" => ["[[", "]]"],
-		 "pre" => [ "\n<example>\n", "\n<example>\n" ],
+		 "pre" => [ "\n<example>\n", "\n</example>\n" ],
 		 "tr" => ["\n", "\n"],
 		 "td" => [" | ", " " ],
 		 "th" => [ " || ", " " ],
