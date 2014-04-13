@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.05 2014-04-13
+ - Added function to return a filter sub
+
 0.04 2014-02-09
  - Fixed "pre" tag parsing
 

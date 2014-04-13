@@ -10,9 +10,10 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our @EXPORT_OK = qw/typography_filter linkify_filter/;
+our @EXPORT_OK = qw/typography_filter linkify_filter
+                   get_typography_filter/;
 
-our $VERSION = '0.03';
+our $VERSION = '0.05';
 
 sub linkify_filter {
   my $l = shift;
@@ -270,8 +271,28 @@ sub typography_filter {
   return substr($text, 1, $llength);
 }
 
+sub get_typography_filter {
+    my ($lang, $links) = @_;
+    my @routines = (\&_typography_filter_common);
+    if ($lang && exists $lang_filters->{$lang}) {
+        push @routines, $lang_filters->{$lang};
+    }
+    if ($links) {
+        push @routines, \&linkify_filter;
+    }
+    return sub {
+        my $text = shift;
+        $text = ' ' . $text . ' ';
+        foreach my $sub (@routines) {
+            $text = $sub->($text);
+        }
+        my $llength = length($text) - 2;
+        return substr($text, 1, $llength);
+    };
+}
 
 1;
+
 __END__
 
 =encoding utf8
@@ -315,6 +336,20 @@ and, in some cases, the superscript for things like 2nd, 13th, etc.
 The languages supported are C<en>, C<fi>, C<hr>, C<sr>, C<ru>, C<es>.
 
 Returns the adjusted string.
+
+=head2 get_typography_filter($lang, $links)
+
+Return a sub which you can call later on a string. The sub will first
+call the common replacements (ugly unicode ligatures). If the first
+argument is set and is a valid language, will do the language specific
+replacements. If the second argument is set and true, will also fix
+the links.
+
+The sub itself will return the adjusted string.
+
+=cut
+
+
 
 =head1 SEE ALSO
 
