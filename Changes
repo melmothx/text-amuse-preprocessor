@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.06 2014-04-13
+ - Fixed manifest
+
 0.05 2014-04-13
  - Added function to return a filter sub
 
