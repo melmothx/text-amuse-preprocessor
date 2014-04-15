@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.07 2014-04-15
+ - Fixed memory cycles test
+
 0.06 2014-04-13
  - Fixed manifest
 
