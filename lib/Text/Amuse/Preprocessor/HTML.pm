@@ -13,7 +13,7 @@ our @ISA = qw(Exporter);
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 
-our @EXPORT_OK = qw( html_to_muse );
+our @EXPORT_OK = qw( html_to_muse html_file_to_muse );
 
 our $VERSION = '0.04';
 
@@ -113,6 +113,10 @@ my %preserved = (
 The first argument must be a decoded string with the HTML text.
 Returns the L<Text::Amuse> formatted body.
 
+=head2 html_file_to_muse($html_file)
+
+The first argument must be a filename.
+
 =cut
 
 sub html_to_muse {
@@ -144,17 +148,39 @@ sub html_to_muse {
     $rawtext =~ s/\Q$string\E/$tostring/g;
   }
   warn $rawtext if $debug;
-  my $p = HTML::PullParser->new(
-				start => '"S", tagname, attr',
-				end   => '"E", tagname',
-				text => '"T", dtext',
-				empty_element_tags => 1,
-				marked_sections => 1,
-				unbroken_text => 1,
-				ignore_elements => [qw(script style)],
-				doc => \$rawtext,
-			       ) or warn "$!\n";
-  
+  return _html_to_muse(\$rawtext);
+}
+
+sub html_file_to_muse {
+  my ($text, $encoding) = @_;
+  $encoding ||= 'utf8';
+  die "$text is not a file" unless (-f $text);
+  open (my $fh, "<:encoding($encoding)", $text) or die $!;
+  return _html_to_muse($fh);
+}
+
+sub _html_to_muse {
+  my $text = shift;
+  my %opts = (
+              start => '"S", tagname, attr',
+              end   => '"E", tagname',
+              text => '"T", dtext',
+              empty_element_tags => 1,
+              marked_sections => 1,
+              unbroken_text => 1,
+              ignore_elements => [qw(script style)],
+             );
+  if (ref($text) eq 'SCALAR') {
+    $opts{doc} = $text;
+  }
+  elsif (-f $text) {
+    $opts{file} = $text;
+  }
+  else {
+    die "Nor a ref, nor a file!";
+  }
+
+  my $p = HTML::PullParser->new(%opts) or die $!;
   my @textstack;
   my @spanpile;
   my @lists;

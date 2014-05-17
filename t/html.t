@@ -5,13 +5,15 @@
 use strict;
 use warnings;
 use utf8;
+use File::Temp;
+use Data::Dumper;
 binmode STDOUT, ":encoding(utf-8)";
 
 #########################
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 16;
+use Test::More tests => 28;
 BEGIN { use_ok('Text::Amuse::Preprocessor::HTML') };
 
 #########################
@@ -19,7 +21,7 @@ BEGIN { use_ok('Text::Amuse::Preprocessor::HTML') };
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
+use Text::Amuse::Preprocessor::HTML qw/html_to_muse html_file_to_muse/;
 
 my $html = '<p>
 	Your text here... &amp; &quot; &ograve;</p>
@@ -341,6 +343,17 @@ sub compare_two_long_strings {
     html_to_muse($xhtml, $debug);
   my @array_exp = split /(\n)/, $xexpected;
   is_deeply(\@array_got, \@array_exp, $testname);
+  my $tmpfh = File::Temp->new(TEMPLATE => "XXXXXXXXXX",
+                              TMPDIR => 1,
+                              SUFFIX => '.muse');
+  my $fname = $tmpfh->filename;
+  open (my $fh, '>:encoding(utf-8)', $fname) or die $!;
+
+  # convert xhtml stripping spaces to mimic the same behaviour
+  print $fh cleanup($xhtml);
+  close $fh;
+  @array_got = split /(\n)/, html_file_to_muse($fname);
+  is_deeply(\@array_got, \@array_exp, $testname);
 }
 
 
@@ -353,3 +366,26 @@ sub showlines {
   }
 }
 
+sub cleanup {
+  my $rawtext = shift;
+  # preliminary cleaning
+  $rawtext =~ s!\t! !gs; # tabs are evil
+  $rawtext =~ s!\r! !gs; # \r is evil
+  $rawtext =~ s!\n! !gs;
+
+  # pack the things like hello<em> there</em> with space. Be careful
+  # with recursions.
+  my $recursion = 0;
+  while (($rawtext =~ m!( </|<[^/]+?> )!) && ($recursion < 20)) {
+    $rawtext =~ s!( +)(</.*?>)!$2$1!g;
+    $rawtext =~ s!(<[^/]*?>)( +)!$2$1!g;
+    $recursion++;
+  }
+  undef $recursion;
+  $rawtext =~ s/ +$//gm;
+  $rawtext =~ s/^ +//gm;
+  $rawtext =~ s!  +! !g;
+  # clear text around <br> 
+  $rawtext =~ s! *<br ?/?> *!<br />!g;
+  return $rawtext;
+}
