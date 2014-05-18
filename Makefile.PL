@@ -19,8 +19,12 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'HTML::PullParser' => 0,
+        'LWP::UserAgent' => 0,
     },
-    EXE_FILES => [ 'bin/muse-rearrange-footnotes.pl' ],
+    EXE_FILES => [
+        'bin/muse-rearrange-footnotes.pl',
+        'bin/html-to-muse.pl',
+       ],
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Text-Amuse-Preprocessor-*' },
     META_MERGE => {

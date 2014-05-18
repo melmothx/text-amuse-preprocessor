@@ -15,7 +15,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT_OK = qw( html_to_muse html_file_to_muse );
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -173,7 +173,7 @@ sub _html_to_muse {
   if (ref($text) eq 'SCALAR') {
     $opts{doc} = $text;
   }
-  elsif (-f $text) {
+  elsif (ref($text) eq 'GLOB') {
     $opts{file} = $text;
   }
   else {
