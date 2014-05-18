@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.09 2014-05-19
+ - Fixed html-to-muse.pl options and doc
+
 0.08 2014-05-18
  - Added script to convert local and remote files to muse
 
