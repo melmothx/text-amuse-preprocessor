@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile/;
@@ -23,13 +23,16 @@ is(Text::Amuse::Preprocessor->html_to_muse('<pre>hello</pre>'),
    "\n<example>\nhello\n</example>\n", "Testing <pre>");
 
 my $output_string;
-my $input_string = "hello there č";
+my $input_string = "hello there č\n";
 my $pptest = Text::Amuse::Preprocessor->new(
                                             input => \$input_string,
                                             output => \$output_string,
                                            );
 
 $pptest->process;
+
+is $output_string, $input_string;
+
 
 ok(-f $pptest->_infile, "internal infile exists")
   and diag "Infile is " . $pptest->_infile;
