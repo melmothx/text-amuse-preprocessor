@@ -251,7 +251,8 @@ sub _typography_filter_ru {
 }
 
 
-my $lang_filters = {
+sub filters {
+    return {
 		    en => \&_typography_filter_en,
 		    fi => \&_typography_filter_fi,
 		    hr => \&_typography_filter_hr,
@@ -259,11 +260,14 @@ my $lang_filters = {
 		    ru => \&_typography_filter_ru,
 		    es => \&_typography_filter_es,
 		   };
+}
 
 sub typography_filter {
   my $lang = $_[0];
   my $text = " " . $_[1] . " ";
   $text = _typography_filter_common($text);
+
+  my $lang_filters = filters();
   if ($lang and exists $lang_filters->{$lang}) {
     $text = $lang_filters->{$lang}->($text);
   }
@@ -274,6 +278,7 @@ sub typography_filter {
 sub get_typography_filter {
     my ($lang, $links) = @_;
     my @routines = (\&_typography_filter_common);
+    my $lang_filters = filters();
     if ($lang && exists $lang_filters->{$lang}) {
         push @routines, $lang_filters->{$lang};
     }
@@ -346,6 +351,10 @@ replacements. If the second argument is set and true, will also fix
 the links.
 
 The sub itself will return the adjusted string.
+
+=head2 filters()
+
+Return an hashref with the filters subs.
 
 =cut
 
