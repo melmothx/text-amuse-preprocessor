@@ -170,8 +170,7 @@ sub process {
 
     my $wd = $self->tmpdir;
     print "# Using $wd to store temporary files\n" if $debug;
-    $self->_set_infile;
-    my $infile = $self->_infile;
+    my $infile = $self->_set_infile;
     die "Something went wrong" unless -f $infile;
 
     if ($self->html) {
@@ -234,6 +233,9 @@ sub process {
         if ($ref eq 'SCALAR') {
             $$output = $self->_read_file($outfile);
         }
+        else {
+            die "Output is not a scalar ref!";
+        }
     }
     else {
         File::Copy::move($outfile, $output)
@@ -289,6 +291,7 @@ sub _set_infile {
     else {
         $self->_infile($input);
     }
+    return $self->_infile;
 }
 
 
@@ -317,8 +320,8 @@ sub error {
 }
 
 sub _set_error {
-    my $self = shift;
-    $self->{_error} = shift;
+    my ($self, $error) = @_;
+    $self->{_error} = $error if $error;
 }
 
 =head2 tmpdir
