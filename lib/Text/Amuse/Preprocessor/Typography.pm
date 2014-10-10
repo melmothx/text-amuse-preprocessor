@@ -13,25 +13,12 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw/typography_filter linkify_filter
                    get_typography_filter/;
 
-our $VERSION = '0.05';
+use Text::Amuse::Preprocessor::TypographyFilters;
+
 
 sub linkify_filter {
-  my $l = shift;
-  $l =~ s{
-	   (?<!\[) # be sure not to redo the same thing, looking behind
-	   ((https?:\/\/) # protocol
-	     (\w[\w\-\.]+\.\w+) # domain
-	     (\:\d+)? # the port
-	     (/ # a slash
-	       [^\[<>\s]* # everything that is not a space, a < > and a [
-	       [\w/] # but end with a letter or a slash
-	     )?
-	   )
-	   (?!\]) # and look around
-  	 }{[[$1][$3]]}gx;
-  return $l;
+    return Text::Amuse::Preprocessor::TypographyFilters::linkify(shift);
 }
-
 
 sub _typography_filter_common {
   my $l = shift;
