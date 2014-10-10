@@ -142,6 +142,11 @@ This is "ómy quotationÓ" and 'Óthisó' and that's all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l'"amore" l'"amore" l'ardore
+
+"хотите присоединиться "к" 'ордену' Библиотекарей"
+'хотите присоединиться "к" 'ордену' Библиотекарей'
+"'хотите'" '"хотите"' '"хотите"'
+'"хотите"' "'хотите'" "'хотите'"
 IN
 
 $expected =<<'OUT';
@@ -194,6 +199,11 @@ This is “ómy quotationÓ” and ‘Óthisó’ and that’s all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l’“amore” l’“amore” l’ardore
+
+“хотите присоединиться “к” ‘ордену’ Библиотекарей”
+‘хотите присоединиться “к” ‘ордену’ Библиотекарей’
+“‘хотите’” ‘“хотите”’ ‘“хотите”’
+‘“хотите”’ “‘хотите’” “‘хотите’”
 OUT
 
 test_strings(english => $input, $expected, 1, 1, 0);
@@ -250,6 +260,11 @@ This is ”ómy quotationÓ” and ’Óthisó’ and that’s all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l’”amore” l’”amore” l’ardore
+
+”хотите присоединиться ”к” ’ордену’ Библиотекарей”
+’хотите присоединиться ”к” ’ордену’ Библиотекарей’
+”’хотите’” ’”хотите”’ ’”хотите”’
+’”хотите”’ ”’хотите’” ”’хотите’”
 OUT
 
 test_strings(finnish => $input, $expected, 1, 1, 0);
@@ -306,6 +321,12 @@ This is «ómy quotationÓ» and ‘Óthisó’ and that’s all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l’«amore» l’«amore» l’ardore
+
+«хотите присоединиться «к» ‘ордену’ Библиотекарей»
+‘хотите присоединиться «к» ‘ордену’ Библиотекарей’
+«‘хотите’» ‘«хотите»’ ‘«хотите»’
+‘«хотите»’ «‘хотите’» «‘хотите’»
+
 OUT
 
 test_strings(spanish => $input, $expected, 1, 1, 0);
@@ -362,6 +383,11 @@ This is „ómy quotationÓ“ and ‚Óthisó‘ and that’s all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l’„amore“ l’„amore“ l’ardore
+
+„хотите присоединиться „к“ ‚ордену‘ Библиотекарей“
+‚хотите присоединиться „к“ ‚ордену‘ Библиотекарей‘
+„‚хотите‘“ ‚„хотите“‘ ‚„хотите“‘
+‚„хотите“‘ „‚хотите‘“ „‚хотите‘“
 OUT
 
 test_strings(serbian => $input, $expected, 1, 1, 0);
@@ -418,6 +444,11 @@ This is »ómy quotationÓ« and ‚Óthisó’ and that’s all
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
 
 l’»amore« l’»amore« l’ardore
+
+»хотите присоединиться »к« ‚ордену’ Библиотекарей«
+‚хотите присоединиться »к« ‚ордену’ Библиотекарей’
+»‚хотите’« ‚»хотите«’ ‚»хотите«’
+‚»хотите«’ »‚хотите’« »‚хотите’«
 OUT
 
 test_strings(croatian => $input, $expected, 1, 1, 0);
