@@ -181,7 +181,7 @@ sub filter {
         $l =~ s/(?<=\S)(\s+)-{1,3}(\s+)(?=\S)/$1$emdash$2/g;
 
         # -word and word-, in the middle of a line
-        $l =~ s/(?<=\S)(\s+)-(\w.+?\w)-(?=\s)/$1$emdash$2$emdash$3/g;
+        $l =~ s/(?<=\S)(\s+)-(\w.+?\w)-(?=\s)/$1$emdash $2 $emdash/g;
 
         # an opening before two digits *probably* is an apostrophe.
         # Very common case.
