@@ -118,8 +118,11 @@ http://www.sociology.ox.ac.uk/papers/dunn73-93.doc
 
 http://www.omnipresence.mahost.org/wd-v2-1-6.htm
 
-and -here we are-
+and -here we are- the - ósecondÓ - example
 
+hello." hell'o"
+
+"?hello?" "?hello?" "l'amour" 'amour'
 IN
 
 $expected =<<'OUT';
@@ -157,8 +160,11 @@ In the ’80 and ’90
 
 [[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
 
-and — here we are —
+and — here we are — the — ósecondÓ — example
 
+hello.” hell’o”
+
+“?hello?” “?hello?” “l’amour” ‘amour’
 OUT
 
 test_strings(english => $input, $expected, 1, 1, 0);
@@ -200,8 +206,11 @@ In the ’80 and ’90
 
 [[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
 
-and – here we are –
+and – here we are – the – ósecondÓ – example
 
+hello.” hell’o”
+
+”?hello?” ”?hello?” ”l’amour” ’amour’
 OUT
 
 test_strings(finnish => $input, $expected, 1, 1, 0);
@@ -253,8 +262,11 @@ In the ’80 and ’90
 
 [[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
 
-and — here we are —
+and — here we are — the — ósecondÓ — example
 
+hello.» hell’o»
+
+«?hello?» «?hello?» «l’amour» ‘amour’
 This is «ómy quotationÓ» and ‘Óthisó’ and that’s all
 
 «This is a ‘quotation’».
