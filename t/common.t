@@ -123,6 +123,16 @@ and -here we are- the - ósecondÓ - example
 hello." hell'o"
 
 "?hello?" "?hello?" "l'amour" 'amour'
+
+This is "ómy quotationÓ" and 'Óthisó' and that's all
+
+"This is a 'quotation'".
+
+"This is a 'quotation'."
+
+sólo Sólo sólobla blasólo sólobla blasólo blasólobla
+
+l'"amore" l'"amore" l'ardore
 IN
 
 $expected =<<'OUT';
@@ -165,6 +175,16 @@ and — here we are — the — ósecondÓ — example
 hello.” hell’o”
 
 “?hello?” “?hello?” “l’amour” ‘amour’
+
+This is “ómy quotationÓ” and ‘Óthisó’ and that’s all
+
+“This is a ‘quotation’”.
+
+“This is a ‘quotation’.”
+
+sólo Sólo sólobla blasólo sólobla blasólo blasólobla
+
+l’“amore” l’“amore” l’ardore
 OUT
 
 test_strings(english => $input, $expected, 1, 1, 0);
@@ -211,21 +231,21 @@ and – here we are – the – ósecondÓ – example
 hello.” hell’o”
 
 ”?hello?” ”?hello?” ”l’amour” ’amour’
+
+This is ”ómy quotationÓ” and ’Óthisó’ and that’s all
+
+”This is a ’quotation’”.
+
+”This is a ’quotation’.”
+
+sólo Sólo sólobla blasólo sólobla blasólo blasólobla
+
+l’”amore” l’”amore” l’ardore
 OUT
 
 test_strings(finnish => $input, $expected, 1, 1, 0);
 
 $input =~ s/^(\#lang).*$/$1 es/m;
-
-$input .= <<'ES';
-This is "ómy quotationÓ" and 'Óthisó' and that's all
-
-"This is a 'quotation'".
-
-"This is a 'quotation'."
-
-sólo Sólo sólobla blasólo sólobla blasólo blasólobla
-ES
 
 $expected =<<'OUT';
 #lang es
@@ -267,6 +287,7 @@ and — here we are — the — ósecondÓ — example
 hello.» hell’o»
 
 «?hello?» «?hello?» «l’amour» ‘amour’
+
 This is «ómy quotationÓ» and ‘Óthisó’ and that’s all
 
 «This is a ‘quotation’».
@@ -274,6 +295,8 @@ This is «ómy quotationÓ» and ‘Óthisó’ and that’s all
 «This is a ‘quotation’.»
 
 sólo Sólo sólobla blasólo sólobla blasólo blasólobla
+
+l’«amore» l’«amore» l’ardore
 OUT
 
 test_strings(spanish => $input, $expected, 1, 1, 0);
