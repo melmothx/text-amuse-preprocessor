@@ -62,7 +62,7 @@ sub test_strings {
     $pp_file->process;
     is_deeply([ split /\n/, read_file($outfile) ],
               [ split /\n/, $expected ],
-              "$name with reference works");
+              "$name with files works");
 }
 
 sub read_file {
