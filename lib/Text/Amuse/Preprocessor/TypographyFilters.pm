@@ -49,6 +49,9 @@ C<rsingle>, C<apos>, C<emdash>, C<endash>.
 
 =cut
 
+# EM-DASH: 2014
+# EN-DASH: 2013
+
 sub characters {
     return {
             en => {
@@ -75,6 +78,7 @@ sub characters {
                    lsingle => "\x{2019}",
                    rsingle => "\x{2019}",
                    apos => "\x{2019}",
+                   # finnish uses short dash
                    emdash => "\x{2013}",
                    endash => "-",
                   },
@@ -84,6 +88,7 @@ sub characters {
                    lsingle => "\x{201a}",
                    rsingle => "\x{2018}",
                    apos => "\x{2019}",
+                   # serbian uses short dash. not sure
                    emdash => "\x{2013}",
                    endash => '-',
                   },
@@ -111,24 +116,26 @@ sub characters {
                    lsingle => "\x{2018}",
                    rsingle => "\x{2019}",
                    apos => "\x{2019}",
-                   emdash => "\x{2013}",
+                   emdash => "\x{2014}",
                    endash => "-",
+                  },
 #             mk => {
 #                    ldouble => "\x{201c}",
 #                    rdouble => "\x{201d}",
 #                    lsingle => "\x{2018}",
 #                    rsingle => "\x{2019}",
 #                    apos => "\x{2019}",
-#                    emdash => "\x{2014}",
+#                    emdash => "\x{2013}",
 #                    endash => "-"
 #                   },
            };
 }
 
+
 =head2 specific_filters
 
 Return an hashref where the key is the language codes and the value a
-sub to filter the line.
+subroutine to filter the line.
 
 Here we put the routines which can't be abstracted away in a
 language-indipendent fashion.
