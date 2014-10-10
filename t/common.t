@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 22;
+use Test::More tests => 24;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -37,7 +37,10 @@ test_strings(missing_nl => "hello\nthere", "hello\nthere\n");
 test_strings('garbage',
              "hello ─ there hello ─ there\r\n\t",
              "hello — there hello — there\n    \n");
-             
+
+test_strings('ellipsis',
+             ". . . test... . . . but here .  .  .  .",
+             "... test...... but here .  .  .  .");
 
 $input =<<'INPUT';
 https://anarhisticka-biblioteka.net/library/

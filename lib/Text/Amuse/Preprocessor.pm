@@ -209,7 +209,7 @@ sub process {
         # carriage returns and tabs
         $line =~ s/\r//g;
         $line =~ s/\t/    /g;
-        $line =~ s/(\.\s){2}\./.../g;
+        $line =~ s/(?<=\.) (?=\.)//g; # collapse the dots
         # some bad things we want to filter anyway
         # $line =~ s/─/—/g; # they look the same, but they are not
         $line =~ s/\x{2500}/\x{2014}/g;
