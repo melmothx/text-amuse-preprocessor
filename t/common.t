@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -32,6 +32,57 @@ test_strings('garbage',
              "hello ─ there hello ─ there\r\n\t",
              "hello — there hello — there\n    \n");
              
+
+$input =<<'INPUT';
+https://anarhisticka-biblioteka.net/library/
+
+<br>http://j12.org/spunk/ http://j12.org/spunk/<br>http://j12.org/spunk/
+
+<br>https://anarhisticka-biblioteka.net/library/erik-satie-depesa<br>https://anarhisticka-biblioteka.net/library/erik-satie-depesa
+
+[[http://j12.org/spunk/][j12.org]]<br>[[http://j12.org/spunk/][j12.org]]
+
+[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]<br>[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]
+
+http://en.wiktionary.org/wiki/%EF%AC%85
+
+http://en.wikipedia.org/wiki/Pi_%28disambiguation%29
+
+http://en.wikipedia.org/wiki/Pi_%28instrument%29
+
+(http://en.wikipedia.org/wiki/Pi_%28instrument%29)
+
+as seen in http://en.wikipedia.org/wiki/Pi_%28instrument%29.
+
+as seen in http://en.wikipedia.org/wiki/Pi_%28instrument%29 and (http://en.wikipedia.org/wiki/Pi_%28instrument%29).
+INPUT
+
+$expected =<<'OUTPUT';
+[[https://anarhisticka-biblioteka.net/library/][anarhisticka-biblioteka.net]]
+
+<br>[[http://j12.org/spunk/][j12.org]] [[http://j12.org/spunk/][j12.org]]<br>[[http://j12.org/spunk/][j12.org]]
+
+<br>[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]<br>[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]
+
+[[http://j12.org/spunk/][j12.org]]<br>[[http://j12.org/spunk/][j12.org]]
+
+[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]<br>[[https://anarhisticka-biblioteka.net/library/erik-satie-depesa][anarhisticka-biblioteka.net]]
+
+[[http://en.wiktionary.org/wiki/%EF%AC%85][en.wiktionary.org]]
+
+[[http://en.wikipedia.org/wiki/Pi_%28disambiguation%29][en.wikipedia.org]]
+
+[[http://en.wikipedia.org/wiki/Pi_%28instrument%29][en.wikipedia.org]]
+
+([[http://en.wikipedia.org/wiki/Pi_%28instrument%29][en.wikipedia.org]])
+
+as seen in [[http://en.wikipedia.org/wiki/Pi_%28instrument%29][en.wikipedia.org]].
+
+as seen in [[http://en.wikipedia.org/wiki/Pi_%28instrument%29][en.wikipedia.org]] and ([[http://en.wikipedia.org/wiki/Pi_%28instrument%29][en.wikipedia.org]]).
+OUTPUT
+
+test_strings(links => $input, $expected, 0, 1, 0);
+
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $fn) = @_;

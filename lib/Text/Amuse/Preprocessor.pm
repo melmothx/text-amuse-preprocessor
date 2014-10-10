@@ -192,7 +192,7 @@ sub process {
         };
     }
 
-    my $filter = get_typography_filter($lang, $self->fix_links);
+    my $filter = get_typography_filter($lang);
 
     my $outfile = $self->_outfile;
     open (my $tmpfh, '<:encoding(utf-8)', $infile)
@@ -201,6 +201,7 @@ sub process {
       or die "Can't open $outfile $!";
 
     my $line;
+    my $fixlinks = $self->fix_links;
     while (<$tmpfh>) {
         $line = $_;
         # carriage returns and tabs
@@ -216,6 +217,9 @@ sub process {
         $line =~ s/\x{fb02}/fl/g;
         $line =~ s/\x{fb03}/ffi/g;
         $line =~ s/\x{fb04}/ffl/g;
+        if ($fixlinks) {
+            $line = Text::Amuse::Preprocessor::TypographyFilters::linkify($line);
+        }
         if ($filter) {
             $line = $filter->($line);
         }
