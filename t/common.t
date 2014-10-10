@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 4;
+use Test::More tests => 6;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -27,6 +27,11 @@ OUT
 test_strings(ligatures => $input, $expected);
 
 test_strings(missing_nl => "hello\nthere", "hello\nthere\n");
+
+test_strings('garbage',
+             "hello ─ there hello ─ there\r\n\t",
+             "hello — there hello — there\n    \n");
+             
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $fn) = @_;

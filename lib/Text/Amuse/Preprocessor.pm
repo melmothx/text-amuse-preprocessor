@@ -204,15 +204,19 @@ sub process {
     my $line;
     while (<$tmpfh>) {
         $line = $_;
-        # some bad things we want to filter anyway
-        $line =~ s/ﬁ/fi/g ;
-        $line =~ s/ﬂ/fl/g ;
-        $line =~ s/ﬃ/ffi/g ;
-        $line =~ s/ﬄ/ffl/g ;
-        $line =~ s/ﬀ/ff/g ;
+        # carriage returns and tabs
+        $line =~ s/\r//g;
+        $line =~ s/\t/    /g;
 
-        $line =~ s/\r//;
-        $line =~ s/\t/    /;
+        # some bad things we want to filter anyway
+        # $line =~ s/─/—/g; # they look the same, but they are not
+        $line =~ s/\x{2500}/\x{2014}/g;
+        # ligatures, totally lame to have in input file
+        $line =~ s/\x{fb00}/ff/g;
+        $line =~ s/\x{fb01}/fi/g;
+        $line =~ s/\x{fb02}/fl/g;
+        $line =~ s/\x{fb03}/ffi/g;
+        $line =~ s/\x{fb04}/ffl/g;
         if ($filter) {
             $line = $filter->($line);
         }
