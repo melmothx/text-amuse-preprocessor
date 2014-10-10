@@ -78,6 +78,15 @@ sub characters {
                    emdash => "\x{2013}",
                    endash => "-",
                   },
+            sr => {
+                   ldouble => "\x{201e}", # german style
+                   rdouble => "\x{201c}",
+                   lsingle => "\x{201a}",
+                   rsingle => "\x{2018}",
+                   apos => "\x{2019}",
+                   emdash => "\x{2014}",
+                   endash => '-',
+                  },
             ru => {
                    ldouble => "\x{ab}",
                    rdouble => "\x{bb}",
@@ -200,15 +209,27 @@ sub filter {
         $l =~ s/^"/$ldouble/;
         $l =~ s/^'/$lsingle/;
 
+        # print encode('UTF-8', "**** $l");
+
+        # apostrophes, between non-white material, probably
+        $l =~ s/(?<=\w)'(?=\w)/$apos/g;
+
+        # print encode('UTF-8', "**** $l");
+
+        # or before a left quote
+        $l =~ s/(?<=\w)'(\Q$lsingle\E)/$apos$1/g;
+        $l =~ s/(?<=\w)'(\Q$ldouble\E)/$apos$1/g;
+
+        # print encode('UTF-8', "**** $l");
+
         # word at the left, closing
         $l =~ s/(?<=\w)"(?=\W)/$rdouble/g;
         $l =~ s/(?<=\w)'(?=\W)/$rsingle/g;
 
+
         # the others are right quotes, hopefully
         $l =~ s/"/$rdouble/gs;
-
-        # or apostrophes, which are the same.
-        $l =~ s/'/$apos/g;
+        $l =~ s/'/$rsingle/g;
 
         # replace with an endash, but only if between digits and not
         # in the middle of something
