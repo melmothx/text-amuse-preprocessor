@@ -327,7 +327,7 @@ quotation“ and ‚this‘ and that’s all
 
 In the ’80 and ’90
 
-— not a list — not really — no
+– not a list – not really – no
 
 ‚this‘ and ‚this.‘
 
@@ -347,7 +347,7 @@ In the ’80 and ’90
 
 [[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
 
-and — here we are — the — ósecondÓ — example
+and – here we are – the – ósecondÓ – example
 
 hello.“ hell’o“
 

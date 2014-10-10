@@ -84,7 +84,7 @@ sub characters {
                    lsingle => "\x{201a}",
                    rsingle => "\x{2018}",
                    apos => "\x{2019}",
-                   emdash => "\x{2014}",
+                   emdash => "\x{2013}",
                    endash => '-',
                   },
             ru => {
