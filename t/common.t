@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 18;
+use Test::More tests => 20;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -452,6 +452,68 @@ l’»amore« l’»amore« l’ardore
 OUT
 
 test_strings(croatian => $input, $expected, 1, 1, 0);
+
+$input =~ s/^(\#lang).*$/$1 ru/m;
+
+$expected =<<'OUT';
+#lang ru
+
+common: fi fl ffi ffl ff fi fl ffi ffl ff
+
+This is «my quotation» and ‘this’ and that’s all This is «my
+quotation» and ‘this’ and that’s all
+
+10-15 and 100000-150000,10-15
+ - a list
+
+12th 13th 1st 2nd 3rd (1st and 2nd and 19th)
+
+In the ’80 and ’90
+
+— not a list — not really — no
+
+‘this’ and ‘this.’
+
+«this» and «this.»
+
+«this» and «this»
+
+«this« and «this«
+
+‘this‘ and ‘this‘
+
+«my» «quote»
+
+4-5,56-18 4-5-6
+
+[[http://www.sociology.ox.ac.uk/papers/dunn73-93.doc][www.sociology.ox.ac.uk]]
+
+[[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
+
+and — here we are — the — ósecondÓ — example
+
+hello.» hell’o»
+
+«?hello?» «?hello?» «l’amour» ‘amour’
+
+This is «ómy quotationÓ» and ‘Óthisó’ and that’s all
+
+«This is a ‘quotation’».
+
+«This is a ‘quotation’.»
+
+sólo Sólo sólobla blasólo sólobla blasólo blasólobla
+
+l’«amore» l’«amore» l’ardore
+
+«хотите присоединиться «к» ‘ордену’ Библиотекарей»
+‘хотите присоединиться «к» ‘ордену’ Библиотекарей’
+«‘хотите’» ‘«хотите»’ ‘«хотите»’
+‘«хотите»’ «‘хотите’» «‘хотите’»
+
+OUT
+
+test_strings(russian => $input, $expected, 1, 1, 0);
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $fn) = @_;
