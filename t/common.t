@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 24;
+use Test::More tests => 13 * 2;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -38,9 +38,15 @@ test_strings('garbage',
              "hello ─ there hello ─ there\r\n\t",
              "hello — there hello — there\n    \n");
 
+test_strings('ellipsis_no_fix',
+             ". . . test... . . . but here .  .  .  .",
+             ". . . test... . . . but here .  .  .  .");
+
+
 test_strings('ellipsis',
              ". . . test... . . . but here .  .  .  .",
-             "... test...... but here .  .  .  .");
+             "... test...... but here .  .  .  .", 1, 1, 0);
+
 
 $input =<<'INPUT';
 https://anarhisticka-biblioteka.net/library/

@@ -179,7 +179,10 @@ sub process {
 
     # then try to get the language
     my ($filter, $specific_filter);
-    if ($self->fix_typography) {
+    my $fixlinks = $self->fix_links;
+    my $fixtypo = $self->fix_typography;
+
+    if ($fixtypo) {
         eval {
             my $info = Text::Amuse::Functions::muse_fast_scan_header($infile);
             if ($info && $info->{lang}) {
@@ -203,13 +206,11 @@ sub process {
       or die "Can't open $outfile $!";
 
     my $line;
-    my $fixlinks = $self->fix_links;
     while (<$tmpfh>) {
         $line = $_;
         # carriage returns and tabs
         $line =~ s/\r//g;
         $line =~ s/\t/    /g;
-        $line =~ s/(?<=\.) (?=\.)//g; # collapse the dots
         # some bad things we want to filter anyway
         # $line =~ s/─/—/g; # they look the same, but they are not
         $line =~ s/\x{2500}/\x{2014}/g;
@@ -219,6 +220,9 @@ sub process {
         $line =~ s/\x{fb02}/fl/g;
         $line =~ s/\x{fb03}/ffi/g;
         $line =~ s/\x{fb04}/ffl/g;
+        if ($fixtypo) {
+            $line =~ s/(?<=\.) (?=\.)//g; # collapse the dots
+        }
         if ($fixlinks) {
             $line = Text::Amuse::Preprocessor::TypographyFilters::linkify($line);
         }
