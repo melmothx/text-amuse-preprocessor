@@ -291,7 +291,7 @@ __END__
 
 =head1 NAME
 
-Text::Amuse::Preprocessor::Typography - Perl extension for pre-processing of Text::Amuse files
+Text::Amuse::Preprocessor::Typography - Perl extension for pre-processing of Text::Amuse files [DEPRECATED]
 
 =head1 SYNOPSIS
 
@@ -303,6 +303,9 @@ Text::Amuse::Preprocessor::Typography - Perl extension for pre-processing of Tex
 
 Common routines to filter the input files, fixing typography and
 language-specific rules. All the text is assumed to be already decoded.
+
+This module is B<DEPRECATED> and kept only for legacy. Please use the
+interface described in L<Text::Amuse::Preprocessor> instead.
 
 =head1 FUNCTIONS
 

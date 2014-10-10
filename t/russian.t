@@ -6,7 +6,7 @@ use utf8;
 binmode STDOUT, ":encoding(utf-8)";
 binmode STDIN, ":encoding(utf-8)";
 
-use Test::More tests => 36;
+use Test::More tests => 37;
 use Data::Dumper;
 
 my $builder = Test::More->builder;
@@ -15,6 +15,7 @@ binmode $builder->failure_output, ":utf8";
 binmode $builder->todo_output,    ":utf8";
 
 use Text::Amuse::Preprocessor::Typography qw/typography_filter/;
+use Text::Amuse::Preprocessor;
 
 my $test =<< 'EOF';
 Я еду домой по~дороге в~школу. Если~бы всё зависело от~меня, но~это
@@ -69,4 +70,18 @@ foreach my $line (@in) {
     $show =~ s/\x{a0}/~/g;
     is $got, $expected, $line or diag "GOT: $count - " . $show;
 }
+
+$test = "#lang ru\n\n" . $test;
+my $exp = my $in = $test;
+
+$exp =~ s/~/\x{a0}/g;
+$in  =~ s/~/ /g;
+my $out = '';
+
+my $pp = Text::Amuse::Preprocessor->new(input => \$in,
+                                        output => \$out,
+                                        debug => 1,
+                                        fix_typography => 1);
+$pp->process;
+is ($out, $exp);
 

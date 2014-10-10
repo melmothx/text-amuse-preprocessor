@@ -3,6 +3,7 @@ package Text::Amuse::Preprocessor::TypographyFilters;
 use strict;
 use warnings;
 use utf8;
+# use Encode;
 
 =encoding utf8
 
@@ -142,13 +143,89 @@ language-indipendent fashion.
 
 =cut
 
+sub _russian_specific {
+    my $l = shift;
+    # before em dash (—) and en dash (−)
+    $l =~ s/ (\x{2013}|\x{2014}|\x{2212})/\x{a0}$1/g;
+
+    # space before, but only if there is a number, otherwise doesn't
+    # make sense.
+
+    $l =~ s/(?<=\d)
+            [ ]+ # white space
+            (
+                # months
+                января | февраля | марта    | апреля  | мая    | июня    |
+                июля   | августа | сентября | октября | ноября | декабря |
+
+                # units
+                г|кг|мм|дм|см|м|км|л|В|А|ВТ|W|°C
+            )
+            \b # word boundary
+           /\x{a0}$1/gsx;
+
+    # space after:
+    $l =~ s/\b # start with a word boundary
+            (
+                # prepositions
+                в|к|о|с|у|
+                В|К|О|С|У|
+                на|от|об|из|за|по|до|во|та|ту|то|те|ко|со|
+                На|От|Об|Из|За|По|До|Во|Со|Ко|Та|Ту|То|Те|
+
+                # conjuctions
+                А |А,|
+                а |а,|
+                И |И,|
+                и |и,|
+                но|но,|
+                Но|Но,|
+
+                # obuiquitous "da"
+                да|да,|Да|Да,|
+
+                # particles with space after
+                не|ни|
+                Не|Ни|
+
+                # interjections, space after
+                ну|ну,|
+                Ну|Ну,|
+
+                # abbreviations
+                с\.|ч\.|
+                см\.|См\.|
+                им\.|Им\.|
+                т\.|п\.
+            )
+            [ ]+ # white space
+            (?=\S) # and look ahead for something that is not a white
+            # space or end of line
+           /$1\x{a0}/gsx;
+
+
+    # and a space before
+    $l =~ s/(?<=\S) # look behind for something that is not \n
+            [ ]+ # one or more space
+            (
+                # particles
+                б|ж|ли|же|ль|бы|бы,|же,
+            )
+            (?=[\W]) # white space follows or something that is not a word
+           /\x{a0}$1/gsx;
+    return $l;
+}
+
+sub _english_specific {
+    my $l = shift;
+    $l =~ s!\b(\d+)(th|rd|st|nd)\b!$1<sup>$2</sup>!g;
+    return $l;
+}
+
 sub specific_filters {
     return {
-            en => sub {
-                my $l = shift;
-                $l =~ s!\b(\d+)(th|rd|st|nd)\b!$1<sup>$2</sup>!g;
-                return $l;
-            },
+            en => \&_english_specific,
+            ru => \&_russian_specific,
            };
 }
 

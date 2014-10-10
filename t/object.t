@@ -7,7 +7,7 @@ use Test::More tests => 7;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile/;
-my $wd = File::Temp->newdir(CLEANUP => 0);
+my $wd = File::Temp->newdir(CLEANUP => 1);
 my $dirname = $wd->dirname;
 
 my $html = '<p>
