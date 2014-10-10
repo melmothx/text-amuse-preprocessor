@@ -87,6 +87,15 @@ sub characters {
                    emdash => "\x{2013}",
                    endash => '-',
                   },
+            hr => {
+                   ldouble => "\x{bb}",
+                   rdouble => "\x{ab}",
+                   lsingle => "\x{201a}",
+                   rsingle => "\x{2019}",
+                   apos => "\x{2019}",
+                   emdash => "\x{2014}",
+                   endash => "-",
+                  },
             ru => {
                    ldouble => "\x{ab}",
                    rdouble => "\x{bb}",
