@@ -178,21 +178,23 @@ sub process {
     }
 
     # then try to get the language
-    my $lang;
+    my ($filter, $specific_filter);
     if ($self->fix_typography) {
         eval {
             my $info = Text::Amuse::Functions::muse_fast_scan_header($infile);
-            print Dumper($info);
             if ($info && $info->{lang}) {
                 if ($info->{lang} =~ m/^\s*([a-z]{2,3})\s*$/s) {
-                    $lang = $1;
+                    my $lang = $1;
                     print "Language is $lang\n" if $debug;
+                    $filter =
+                      Text::Amuse::Preprocessor::TypographyFilters::filter($lang);
+                    $specific_filter =
+                      Text::Amuse::Preprocessor::TypographyFilters::specific_filter($lang);
                 }
             }
         };
     }
 
-    my $filter = get_typography_filter($lang);
 
     my $outfile = $self->_outfile;
     open (my $tmpfh, '<:encoding(utf-8)', $infile)
@@ -207,7 +209,7 @@ sub process {
         # carriage returns and tabs
         $line =~ s/\r//g;
         $line =~ s/\t/    /g;
-
+        $line =~ s/(\.\s){2}\./.../g;
         # some bad things we want to filter anyway
         # $line =~ s/─/—/g; # they look the same, but they are not
         $line =~ s/\x{2500}/\x{2014}/g;
@@ -222,6 +224,9 @@ sub process {
         }
         if ($filter) {
             $line = $filter->($line);
+        }
+        if ($specific_filter) {
+            $line = $specific_filter->($line);
         }
         print $auxfh $line;
     }

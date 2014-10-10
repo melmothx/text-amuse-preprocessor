@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 8;
+use Test::More tests => 12;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -83,6 +83,123 @@ OUTPUT
 
 test_strings(links => $input, $expected, 0, 1, 0);
 
+$input =<<'IN';
+#lang en
+
+common: ﬁ ﬂ ﬃ ﬄ ﬀ ﬁ ﬂ ﬃ ﬄ ﬀ
+
+This is "my quotation" and 'this' and that's all This is "my
+quotation" and 'this' and that's all
+
+10-15 and 100000-150000,10-15
+ - a list
+
+12th 13th 1st 2nd 3rd (1st and 2nd and 19th)
+
+In the '80 and '90
+
+- not a list - not really - no
+
+'this' and 'this.'
+
+"this" and "this."
+
+''this'' and ''this''
+
+``this`` and ``this``
+
+`this` and `this`
+
+''my'' ``quote"
+
+4-5,56-18 4-5-6
+
+http://www.sociology.ox.ac.uk/papers/dunn73-93.doc
+
+http://www.omnipresence.mahost.org/wd-v2-1-6.htm
+
+IN
+
+$expected =<<'OUT';
+#lang en
+
+common: fi fl ffi ffl ff fi fl ffi ffl ff
+
+This is “my quotation” and ‘this’ and that’s all This is “my
+quotation” and ‘this’ and that’s all
+
+10–15 and 100000–150000,10–15
+ - a list
+
+12<sup>th</sup> 13<sup>th</sup> 1<sup>st</sup> 2<sup>nd</sup> 3<sup>rd</sup> (1<sup>st</sup> and 2<sup>nd</sup> and 19<sup>th</sup>)
+
+In the ’80 and ’90
+
+— not a list — not really — no
+
+‘this’ and ‘this.’
+
+“this” and “this.”
+
+“this” and “this”
+
+“this“ and “this“
+
+‘this‘ and ‘this‘
+
+“my” “quote”
+
+4–5,56–18 4-5-6
+
+[[http://www.sociology.ox.ac.uk/papers/dunn73-93.doc][www.sociology.ox.ac.uk]]
+
+[[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
+OUT
+
+test_strings(links => $input, $expected, 1, 1, 0);
+
+$input =~ s/^(\#lang).*$/$1 fi/m;
+
+my $fiout = $expected;
+
+$expected =<<'OUT';
+#lang fi
+
+common: fi fl ffi ffl ff fi fl ffi ffl ff
+
+This is ”my quotation” and ’this’ and that’s all This is ”my
+quotation” and ’this’ and that’s all
+
+10-15 and 100000-150000,10-15
+ - a list
+
+12th 13th 1st 2nd 3rd (1st and 2nd and 19th)
+
+In the ’80 and ’90
+
+– not a list – not really – no
+
+’this’ and ’this.’
+
+”this” and ”this.”
+
+”this” and ”this”
+
+”this” and ”this”
+
+’this’ and ’this’
+
+”my” ”quote”
+
+4-5,56-18 4-5-6
+
+[[http://www.sociology.ox.ac.uk/papers/dunn73-93.doc][www.sociology.ox.ac.uk]]
+
+[[http://www.omnipresence.mahost.org/wd-v2-1-6.htm][www.omnipresence.mahost.org]]
+
+OUT
+
+test_strings(links => $input, $expected, 1, 1, 0);
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $fn) = @_;
