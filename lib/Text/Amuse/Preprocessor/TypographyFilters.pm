@@ -157,7 +157,7 @@ language-indipendent fashion.
 
 =cut
 
-sub _russian_specific {
+sub _ru_nbsp_filter {
     my $l = shift;
     # before em dash (—) and en dash (−)
     $l =~ s/ (\x{2013}|\x{2014}|\x{2212})/\x{a0}$1/g;
@@ -230,6 +230,7 @@ sub _russian_specific {
     return $l;
 }
 
+
 sub _english_specific {
     my $l = shift;
     $l =~ s!\b(\d+)(th|rd|st|nd)\b!$1<sup>$2</sup>!g;
@@ -239,7 +240,6 @@ sub _english_specific {
 sub specific_filters {
     return {
             en => \&_english_specific,
-            ru => \&_russian_specific,
            };
 }
 
@@ -345,5 +345,26 @@ sub filter {
     };
     return $filter;
 }
+
+sub _nbsp_filters {
+    return {
+            ru => \&_ru_nbsp_filter,
+           };
+}
+
+=head2 nbsp_filter($lang)
+
+Return a sub (if the filter exists) to place non-breaking spaces in
+language-specific places.
+
+=cut
+
+sub nbsp_filter {
+    my ($lang) = @_;
+    return unless $lang;
+    return _nbsp_filters()->{$lang};
+}
+
+
 
 1;

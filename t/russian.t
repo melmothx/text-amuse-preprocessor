@@ -81,6 +81,7 @@ my $out = '';
 my $pp = Text::Amuse::Preprocessor->new(input => \$in,
                                         output => \$out,
                                         debug => 1,
+                                        fix_nbsp => 1,
                                         fix_typography => 1);
 $pp->process;
 is ($out, $exp);

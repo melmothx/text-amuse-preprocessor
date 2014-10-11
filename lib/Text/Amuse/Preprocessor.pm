@@ -31,12 +31,25 @@ our $VERSION = '0.09';
   my $pp = Text::Amuse::Preprocessor->new(
                                           input => $infile,
                                           output => $outfile,
-                                          html => 1,
-                                          fix_links => 1,
+                                          html           => 1,
+                                          fix_links      => 1,
                                           fix_typography => 1,
-                                          fix_footnotes => 1
+                                          fix_nbsp       => 1,
+                                          fix_footnotes  => 1
                                          );
   $pp->process;
+
+=head1 DESCRIPTIONS
+
+This module provides a solution to apply some common fixes to muse
+files.
+
+Without any option save for C<input> and C<output> (which are
+mandatory), the only things the module does is to remove carriage
+returns, replace character ligatures or characters which shouldn't
+enter at all and expand the tabs to 4 spaces (no smart expanding).
+
+The source is pretty much commented.
 
 =head1 ACCESSORS
 
@@ -75,7 +88,12 @@ Find the links and add the markup if needed. Default to false.
 
 =head3 fix_typography
 
-Apply the typographical fixes. Default to false.
+Apply the typographical fixes. Default to false. This add the "smart
+quotes" feature.
+
+=head3 fix_nbsp
+
+Add non-break spaces where appropriate (whatever this means).
 
 =head3 fix_footnotes
 
@@ -96,12 +114,13 @@ Constructor. Accepts the above options.
 sub new {
     my ($class, %options) = @_;
     my $self = {
-                html => 0,
-                fix_links => 0,
+                html            => 0,
+                fix_links       => 0,
                 fix_typography  => 0,
-                fix_footnotes => 0,
-                debug => 0,
-                input => undef,
+                fix_footnotes   => 0,
+                fix_nbsp        => 0,
+                debug  => 0,
+                input  => undef,
                 output => undef,
                };
     foreach my $k (keys %$self) {
@@ -109,6 +128,8 @@ sub new {
             $self->{$k} = delete $options{$k};
         }
     }
+    die "Unrecognized option: " . join(keys %options) . "\n" if %options;
+
     $self->{_error} = '';
     die "Unrecognized options: " . join(" ", keys %options) if %options;
     bless $self, $class;
@@ -124,6 +145,10 @@ sub fix_links {
 
 sub fix_typography {
     return shift->{fix_typography};
+}
+
+sub fix_nbsp {
+    return shift->{fix_nbsp};
 }
 
 sub fix_footnotes {
@@ -178,26 +203,22 @@ sub process {
     }
 
     # then try to get the language
-    my ($filter, $specific_filter);
+    my ($filter, $specific_filter, $nbsp_filter);
     my $fixlinks = $self->fix_links;
     my $fixtypo = $self->fix_typography;
+    my $lang = $self->_get_lang;
 
-    if ($fixtypo) {
-        eval {
-            my $info = Text::Amuse::Functions::muse_fast_scan_header($infile);
-            if ($info && $info->{lang}) {
-                if ($info->{lang} =~ m/^\s*([a-z]{2,3})\s*$/s) {
-                    my $lang = $1;
-                    print "Language is $lang\n" if $debug;
-                    $filter =
-                      Text::Amuse::Preprocessor::TypographyFilters::filter($lang);
-                    $specific_filter =
-                      Text::Amuse::Preprocessor::TypographyFilters::specific_filter($lang);
-                }
-            }
-        };
+    if ($lang && $fixtypo) {
+        $filter =
+          Text::Amuse::Preprocessor::TypographyFilters::filter($lang);
+        $specific_filter =
+          Text::Amuse::Preprocessor::TypographyFilters::specific_filter($lang);
     }
 
+    if ($lang && $self->fix_nbsp) {
+        $nbsp_filter =
+          Text::Amuse::Preprocessor::TypographyFilters::nbsp_filter($lang);
+    }
 
     my $outfile = $self->_outfile;
     open (my $tmpfh, '<:encoding(utf-8)', $infile)
@@ -208,6 +229,9 @@ sub process {
     my $line;
     while (<$tmpfh>) {
         $line = $_;
+        #remove nulls
+        $line =~ s/\0//g;
+
         # carriage returns and tabs
         $line =~ s/\r//g;
         $line =~ s/\t/    /g;
@@ -231,6 +255,9 @@ sub process {
         }
         if ($specific_filter) {
             $line = $specific_filter->($line);
+        }
+        if ($nbsp_filter) {
+            $line = $nbsp_filter->($line);
         }
         print $auxfh $line;
     }
@@ -349,6 +376,23 @@ sub tmpdir {
         $self->{_tmpdir} = File::Temp->newdir(CLEANUP => !$self->debug);
     }
     return $self->{_tmpdir}->dirname;
+}
+
+sub _get_lang {
+    my $self = shift;
+    my $infile = $self->_infile;
+    # shoudn't happen
+    die unless $infile && -f $infile;
+    my $info;
+    eval {
+        $info = Text::Amuse::Functions::muse_fast_scan_header($infile);
+    };
+    if ($info && $info->{lang}) {
+        if ($info->{lang} =~ m/^\s*([a-z]{2,3})\s*$/s) {
+            return $1;
+        }
+    }
+    return;
 }
 
 
