@@ -101,7 +101,7 @@ my $original_expected = $expected;
 
 test_strings(links => $input, $expected, 0, 1, 0);
 
-foreach my $lang (qw/en fi es sr hr ru it/) {
+foreach my $lang (qw/en fi es sr hr ru it mk/) {
     test_lang($lang);
 }
 

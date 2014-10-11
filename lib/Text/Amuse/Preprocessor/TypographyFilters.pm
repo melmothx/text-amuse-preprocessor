@@ -120,15 +120,15 @@ sub characters {
                    emdash => "\x{2014}",
                    endash => "-",
                   },
-#             mk => {
-#                    ldouble => "\x{201c}",
-#                    rdouble => "\x{201d}",
-#                    lsingle => "\x{2018}",
-#                    rsingle => "\x{2019}",
-#                    apos => "\x{2019}",
-#                    emdash => "\x{2013}",
-#                    endash => "-"
-#                   },
+             mk => {
+                    ldouble => "\x{201e}",
+                    rdouble => "\x{201c}",
+                    lsingle => "\x{2019}",
+                    rsingle => "\x{2018}",
+                    apos => "\x{2019}",
+                    emdash => "\x{2013}",
+                    endash => "\x{2013}"
+                   },
            };
 }
 
