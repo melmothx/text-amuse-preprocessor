@@ -63,6 +63,7 @@ sub characters {
                    apos => "\x{2019}",
                    emdash => "\x{2014}",
                    endash => "\x{2013}",
+                   dash =>    "\x{2014}",
                   },
             es => {
                    ldouble => "\x{ab}",
@@ -72,6 +73,7 @@ sub characters {
                    apos => "\x{2019}",
                    emdash => "\x{2014}",
                    endash => "-",
+                   dash =>    "\x{2014}",
                   },
             fi => {
                    ldouble => "\x{201d}",
@@ -82,53 +84,65 @@ sub characters {
                    # finnish uses short dash
                    emdash => "\x{2013}",
                    endash => "-",
+                   dash =>    "\x{2013}",
                   },
             sr => {
-                   ldouble => "\x{201e}", # german style
+                   #  „članak o ’svicima’“
+                   ldouble => "\x{201e}",
                    rdouble => "\x{201c}",
-                   lsingle => "\x{201a}",
-                   rsingle => "\x{2018}",
-                   apos => "\x{2019}",
-                   # serbian uses short dash. not sure
-                   emdash => "\x{2013}",
-                   endash => '-',
+                   lsingle => "\x{2019}",
+                   rsingle => "\x{2019}",
+                   apos =>    "\x{2019}",
+                   # serbian uses short dash.
+                   emdash =>  "\x{2013}",
+                   endash =>  "\x{2013}",
+                   dash =>    "\x{2014}",
                   },
             hr => {
-                   ldouble => "\x{bb}",
-                   rdouble => "\x{ab}",
-                   lsingle => "\x{201a}",
+                   # http://pravopis.hr/pravilo/navodnici/71/ „...” i »...«.
+                   ldouble => "\x{201e}",
+                   rdouble => "\x{201d}",
+                   # http://pravopis.hr/pravilo/polunavodnici/73/ ‘...’
+                   lsingle => "\x{2018}",
                    rsingle => "\x{2019}",
                    apos => "\x{2019}",
-                   emdash => "\x{2014}",
-                   endash => "-",
+                   # croatian uses short dash:
+                   # http://pravopis.hr/pravilo/crtica/69/
+                   emdash =>  "\x{2013}",
+                   endash =>  "\x{2013}",
+                   dash =>    "\x{2014}",
                   },
             ru => {
                    ldouble => "\x{ab}",
                    rdouble => "\x{bb}",
                    lsingle => "\x{2018}",
                    rsingle => "\x{2019}",
-                   apos => "\x{2019}",
-                   emdash => "\x{2014}",
-                   endash => "-",
+                   apos    => "\x{2019}",
+                   emdash  => "\x{2014}",
+                   endash  => "-",
+                   dash    => "\x{2014}",
                   },
             it => {
-                   ldouble => "\x{ab}",
-                   rdouble => "\x{bb}",
+                   ldouble => "\x{201c}",
+                   rdouble => "\x{201d}",
                    lsingle => "\x{2018}",
                    rsingle => "\x{2019}",
-                   apos => "\x{2019}",
-                   emdash => "\x{2014}",
-                   endash => "-",
+                   apos    => "\x{2019}",
+                   emdash  => "\x{2013}",
+                   endash  => "-",
+                   dash    => "\x{2014}",
                   },
-             mk => {
-                    ldouble => "\x{201e}",
-                    rdouble => "\x{201c}",
-                    lsingle => "\x{2019}",
-                    rsingle => "\x{2018}",
-                    apos => "\x{2019}",
-                    emdash => "\x{2013}",
-                    endash => "\x{2013}"
-                   },
+            # Macedonian 	„…“ 	’…‘
+            mk => {
+                   ldouble => "\x{201e}",
+                   rdouble => "\x{201c}",
+                   lsingle => "\x{2019}",
+                   rsingle => "\x{2018}",
+                   apos    => "\x{2019}",
+                   emdash  => "\x{2013}",
+                   endash  => "\x{2013}",
+                   dash    => "\x{2014}",
+                  },
            };
 }
 
