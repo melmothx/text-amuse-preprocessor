@@ -270,14 +270,14 @@ sub filter {
     return unless $chars;
 
     # copy to avoid typos
-    my $ldouble = $chars->{ldouble};
-    my $rdouble = $chars->{rdouble};
-    my $lsingle = $chars->{lsingle};
-    my $rsingle = $chars->{rsingle};
-    my $apos =    $chars->{apos};
-    my $emdash =  $chars->{emdash};
-    my $endash =  $chars->{endash};
-
+    my $ldouble = $chars->{ldouble} or die;
+    my $rdouble = $chars->{rdouble} or die;
+    my $lsingle = $chars->{lsingle} or die;
+    my $rsingle = $chars->{rsingle} or die;
+    my $apos =    $chars->{apos}    or die;
+    my $emdash =  $chars->{emdash}  or die;
+    my $endash =  $chars->{endash}  or die;
+    my $dash    = $chars->{dash}    or die;
     my $filter = sub {
         my $l = shift;
 
@@ -289,8 +289,8 @@ sub filter {
         # but set it as ", we'll replace that later
         $l =~ s/''/"/g;
 
-        # beginning of the line, emdahs
-        $l =~ s/^-(?=\s)/$emdash/;
+        # beginning of the line, long dash
+        $l =~ s/^-(?=\s)/$dash/;
 
         # between spaces, just replace
         $l =~ s/(?<=\S)(\s+)-{1,3}(\s+)(?=\S)/$1$emdash$2/g;
