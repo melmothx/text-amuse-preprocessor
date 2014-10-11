@@ -84,5 +84,6 @@ my $pp = Text::Amuse::Preprocessor->new(input => \$in,
                                         fix_nbsp => 1,
                                         fix_typography => 1);
 $pp->process;
-is ($out, $exp);
+is_deeply ([ split /\n/, $out],
+           [ split /\n/, $exp]);
 

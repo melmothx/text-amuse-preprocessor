@@ -157,80 +157,6 @@ language-indipendent fashion.
 
 =cut
 
-sub _ru_nbsp_filter {
-    my $l = shift;
-    # before em dash (—) and en dash (−)
-    $l =~ s/ (\x{2013}|\x{2014}|\x{2212})/\x{a0}$1/g;
-
-    # space before, but only if there is a number, otherwise doesn't
-    # make sense.
-
-    $l =~ s/(?<=\d)
-            [ ]+ # white space
-            (
-                # months
-                января | февраля | марта    | апреля  | мая    | июня    |
-                июля   | августа | сентября | октября | ноября | декабря |
-
-                # units
-                г|кг|мм|дм|см|м|км|л|В|А|ВТ|W|°C
-            )
-            \b # word boundary
-           /\x{a0}$1/gsx;
-
-    # space after:
-    $l =~ s/\b # start with a word boundary
-            (
-                # prepositions
-                в|к|о|с|у|
-                В|К|О|С|У|
-                на|от|об|из|за|по|до|во|та|ту|то|те|ко|со|
-                На|От|Об|Из|За|По|До|Во|Со|Ко|Та|Ту|То|Те|
-
-                # conjuctions
-                А |А,|
-                а |а,|
-                И |И,|
-                и |и,|
-                но|но,|
-                Но|Но,|
-
-                # obuiquitous "da"
-                да|да,|Да|Да,|
-
-                # particles with space after
-                не|ни|
-                Не|Ни|
-
-                # interjections, space after
-                ну|ну,|
-                Ну|Ну,|
-
-                # abbreviations
-                с\.|ч\.|
-                см\.|См\.|
-                им\.|Им\.|
-                т\.|п\.
-            )
-            [ ]+ # white space
-            (?=\S) # and look ahead for something that is not a white
-            # space or end of line
-           /$1\x{a0}/gsx;
-
-
-    # and a space before
-    $l =~ s/(?<=\S) # look behind for something that is not \n
-            [ ]+ # one or more space
-            (
-                # particles
-                б|ж|ли|же|ль|бы|бы,|же,
-            )
-            (?=[\W]) # white space follows or something that is not a word
-           /\x{a0}$1/gsx;
-    return $l;
-}
-
-
 sub _english_specific {
     my $l = shift;
     $l =~ s!\b(\d+)(th|rd|st|nd)\b!$1<sup>$2</sup>!g;
@@ -347,8 +273,63 @@ sub filter {
 }
 
 sub _nbsp_filters {
+    return { ru => \&_ru_nbsp_filter };
+}
+
+sub _nbsp_specs {
     return {
-            ru => \&_ru_nbsp_filter,
+            # to read: add a space ...
+            ru => {
+                   before_words => [
+                                    "\x{2013}",
+                                    "\x{2014}",
+                                    "\x{2212}",
+                                    "б", "ж", "ли", "же", "ль", "бы", "бы,", "же",
+                                   ],
+                   after_digit_before_words => [
+                                                "января",
+                                                "февраля",
+                                                "марта",
+                                                "апреля",
+                                                "мая",
+                                                "июня",
+                                                "июля",
+                                                "августа",
+                                                "сентября",
+                                                "октября",
+                                                "ноября",
+                                                "декабря",
+                                                "г",
+                                                "кг",
+                                                "мм",
+                                                "дм",
+                                                "см",
+                                                "м",
+                                                "км",
+                                                "л",
+                                                "В",
+                                                "А",
+                                                "ВТ",
+                                                "W",
+                                                "°C",
+                                               ],
+                   after_words => [
+                                   "в", "к", "о", "с", "у",
+                                   "В", "К", "О", "С", "У",
+                                   "на", "от", "об", "из", "за", "по", "до", "во",
+                                   "та", "ту", "то", "те", "ко", "со",
+                                   "На", "От", "Об", "Из", "За", "По", "До", "Во",
+                                   "Ко", "Та", "Ту", "То", "Те", "Со",
+                                   "А", "А,", "а", "а,",
+                                   "И", "И,", "и", "и,",
+                                   "но", "но,", "Но", "Но,",
+                                   "да", "да,", "Да", "Да,",
+                                   "не", "ни",  "Не", "Ни",
+                                   "ну", "ну,", "Ну", "Ну,",
+                                   "с.", "ч.",  "см.", "См.",
+                                   "им.", "Им.","т.", "п."
+                                  ]
+                  },
            };
 }
 
@@ -362,7 +343,37 @@ language-specific places.
 sub nbsp_filter {
     my ($lang) = @_;
     return unless $lang;
-    return _nbsp_filters()->{$lang};
+    my $specs = _nbsp_specs()->{$lang};
+    return unless $specs;
+    my @before_words             = @{ $specs->{before_words}             };
+    my @after_digit_before_words = @{ $specs->{after_digit_before_words} };
+    my @after_words              = @{ $specs->{after_words}              };
+    return unless (@before_words || @after_digit_before_words || @after_words);
+    return sub {
+        my $l = shift;
+        foreach my $token (@before_words) {
+            $l =~ s/(?<=\S)
+                    \s+
+                    \Q$token\E
+                    (?=\W)
+                   /\x{a0}$token/gx;
+        }
+        foreach my $token (@after_digit_before_words) {
+            $l =~ s/(?<=\d)
+                    \s+
+                    \Q$token\E
+                    (?=\W)
+                   /\x{a0}$token/gx;
+        }
+        foreach my $token (@after_words) {
+            $l =~ s/\b
+                    \Q$token\E
+                    \s+
+                    (?=\S)
+                   /$token\x{a0}/gx;
+        }
+        return $l;
+    };
 }
 
 
