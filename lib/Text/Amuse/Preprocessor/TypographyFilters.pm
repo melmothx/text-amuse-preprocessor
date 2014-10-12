@@ -207,6 +207,10 @@ sub filter {
     my $filter = sub {
         my $l = shift;
 
+        # TODO
+        # if there is nothing to do, speed up.
+        # return $l unless $l =~ /['"`-]/;
+
         # first, consider `` and '' opening and closing doubles
         $l =~ s/``/$ldouble/g;
 
@@ -331,6 +335,7 @@ sub nbsp_filter {
     my @after_digit_before_words = @{ $specs->{after_digit_before_words} };
     my @after_words              = @{ $specs->{after_words}              };
     return unless (@before_words || @after_digit_before_words || @after_words);
+    # TODO: convert the list in qr//, probably we get a speed up
     return sub {
         my $l = shift;
         foreach my $token (@before_words) {
