@@ -207,9 +207,8 @@ sub filter {
     my $filter = sub {
         my $l = shift;
 
-        # TODO
         # if there is nothing to do, speed up.
-        # return $l unless $l =~ /['"`-]/;
+        return $l unless $l =~ /['"`-]/;
 
         # first, consider `` and '' opening and closing doubles
         $l =~ s/``/$ldouble/g;
@@ -331,33 +330,42 @@ sub nbsp_filter {
     return unless $lang;
     my $specs = _nbsp_specs()->{$lang};
     return unless $specs;
-    my @before_words             = @{ $specs->{before_words}             };
-    my @after_digit_before_words = @{ $specs->{after_digit_before_words} };
-    my @after_words              = @{ $specs->{after_words}              };
-    return unless (@before_words || @after_digit_before_words || @after_words);
-    # TODO: convert the list in qr//, probably we get a speed up
+    my @patterns;
+    foreach my $token (@{ $specs->{before_words} }) {
+        push @patterns, [
+                         qr/(?<=\S)
+                            \s+
+                            \Q$token\E
+                            (?=\W)/x,
+                         "\x{a0}$token"
+                        ];
+    }
+    foreach my $token (@{ $specs->{after_digit_before_words} }) {
+        push @patterns, [
+                         qr/(?<=\d)
+                            \s+
+                            \Q$token\E
+                            (?=\W)
+                           /x,
+                         "\x{a0}$token"
+                        ];
+    }
+    foreach my $token (@{ $specs->{after_words} }) {
+        push @patterns, [
+                         qr/\b
+                            \Q$token\E
+                            \s+
+                            (?=\S)
+                           /x,
+                         "$token\x{a0}"
+                        ];
+    }
+    return unless (@patterns);
     return sub {
         my $l = shift;
-        foreach my $token (@before_words) {
-            $l =~ s/(?<=\S)
-                    \s+
-                    \Q$token\E
-                    (?=\W)
-                   /\x{a0}$token/gx;
-        }
-        foreach my $token (@after_digit_before_words) {
-            $l =~ s/(?<=\d)
-                    \s+
-                    \Q$token\E
-                    (?=\W)
-                   /\x{a0}$token/gx;
-        }
-        foreach my $token (@after_words) {
-            $l =~ s/\b
-                    \Q$token\E
-                    \s+
-                    (?=\S)
-                   /$token\x{a0}/gx;
+        foreach my $pattern (@patterns) {
+            my ($from, $to) = @$pattern;
+            $l =~ s/$from/$to/g;
         }
         return $l;
     };
