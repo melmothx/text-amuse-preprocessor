@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 14 * 2;
+use Test::More tests => 15 * 2;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -112,8 +112,13 @@ sub test_lang {
     test_strings($lang, $input, $expected, 1, 1, 0);
 }
 
+test_strings("Full example",
+             read_file(catfile(qw/t testfiles full.in.muse/)),
+             read_file(catfile(qw/t testfiles full.out.muse/)),
+             1, 1, 1, 1);
+
 sub test_strings {
-    my ($name, $input, $expected, $typo, $links, $fn) = @_;
+    my ($name, $input, $expected, $typo, $links, $nbsp, $fn) = @_;
 
     my $input_string = $input;
     my $output_string = '';
@@ -123,6 +128,8 @@ sub test_strings {
                                             fix_links => $links,
                                             fix_typography => $typo,
                                             fix_footnotes => $fn,
+                                            fix_nbsp => $nbsp,
+                                            debug => 0,
                                            );
     $pp->process;
     is_deeply([ split /\n/, $output_string ],
@@ -142,6 +149,8 @@ sub test_strings {
                                                  fix_links => $links,
                                                  fix_typography => $typo,
                                                  fix_footnotes => $fn,
+                                                 fix_nbsp => $nbsp,
+                                                 debug => 0,
                                                 );
     $pp_file->process;
     is_deeply([ split /\n/, read_file($outfile) ],

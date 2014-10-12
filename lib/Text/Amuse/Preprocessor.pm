@@ -6,6 +6,7 @@ use warnings;
 
 use Text::Amuse::Preprocessor::HTML;
 use Text::Amuse::Preprocessor::Typography qw/get_typography_filter/;
+use Text::Amuse::Preprocessor::Footnotes;
 use Text::Amuse::Functions;
 use File::Spec;
 use File::Temp qw();
@@ -201,6 +202,11 @@ sub _outfile {
     return File::Spec->catfile($self->tmpdir, 'output.muse');
 }
 
+sub _fn_outfile {
+    my $self = shift;
+    return File::Spec->catfile($self->tmpdir, 'fn-out.muse');
+}
+
 sub process {
     my $self = shift;
     my $debug = $self->debug;
@@ -283,6 +289,22 @@ sub process {
     }
     close $auxfh or die $!;
     close $tmpfh or die $!;
+
+    if ($self->fix_footnotes) {
+        my $fn_auxfile = $self->_fn_outfile;
+        my $fnfixer = Text::Amuse::Preprocessor::Footnotes
+          ->new(input  => $outfile,
+                output => $fn_auxfile);
+        if ($fnfixer->process) {
+            # replace the outfile
+            $outfile = $fn_auxfile;
+        }
+        else {
+            # set the error
+            $self->_set_error({ %{ $fnfixer->error } });
+            return;
+        }
+    }
 
     my $output = $self->output;
     if (my $ref = ref($output)) {
