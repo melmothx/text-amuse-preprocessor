@@ -1,5 +1,12 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.20 2014-10-12
+ - Major upgrade. Text::Amuse::Preprocessor is now the recommend interface
+ - Footnote rearranger is now plugged into the preprocessor
+ - New script: muse-check-footnotes.pl
+ - Major internal refactoring
+ - New tests
+
 0.09 2014-05-19
  - Fixed html-to-muse.pl options and doc
 
