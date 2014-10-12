@@ -16,8 +16,10 @@ t/common.t
 t/footnotes.t
 t/footnotes/bad.muse
 t/footnotes/bad2.muse
-t/footnotes/expected.muse
-t/footnotes/good.muse
+t/footnotes/good.in
+t/footnotes/good.out
+t/footnotes/good2.in
+t/footnotes/good2.out
 t/html.t
 t/manifest.t
 t/memory-cycles.t

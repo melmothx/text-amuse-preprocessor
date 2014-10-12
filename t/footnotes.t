@@ -8,20 +8,26 @@ use File::Spec::Functions qw/catfile catdir/;
 use Text::Amuse::Preprocessor;
 use Text::Amuse::Preprocessor::Footnotes;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Data::Dumper;
 
-my $good = catfile(qw/t footnotes good.muse/);
-my $expected = catfile(qw/t footnotes expected.muse/);
 my $out = catfile(qw/t footnotes out.muse/);
-my $pp = Text::Amuse::Preprocessor::Footnotes->new(input => $good,
-                                                   output => $out,
-                                                   debug  => 1,
-                                                  );
 
-ok ($pp->process, "success") or diag Dumper($pp->error);
-ok (!$pp->error);
-compare_files($out, $expected);
+my $pp;
+
+foreach my $good (qw/good good2/) {
+    my $input    = catfile(qw/t footnotes/, $good . '.in');
+    my $expected = catfile(qw/t footnotes/, $good . '.out');
+    diag "Testing $input => $expected";
+    $pp = Text::Amuse::Preprocessor::Footnotes->new(input => $input,
+                                                    output => $out,
+                                                    debug  => 1,
+                                                  );
+    ok ($pp->process, "success") or diag Dumper($pp->error);
+    ok (!$pp->error);
+    compare_files($out, $expected);
+}
+
 
 my $too_many_refs = catfile(qw/t footnotes bad.muse/);
 
