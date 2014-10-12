@@ -1,5 +1,8 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.21 2014-10-12
+ - Fixed indexing of Text::Amuse::Preprocessor::Typography (deprecated)
+
 0.20 2014-10-12
  - Major upgrade. Text::Amuse::Preprocessor is now the recommend interface
  - Footnote rearranger is now plugged into the preprocessor

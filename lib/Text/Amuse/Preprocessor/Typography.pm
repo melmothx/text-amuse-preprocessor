@@ -13,6 +13,9 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw/typography_filter linkify_filter
                    get_typography_filter/;
 
+# frozen at 0.09
+our $VERSION = '0.09';
+
 use Text::Amuse::Preprocessor::TypographyFilters;
 
 
