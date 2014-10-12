@@ -91,6 +91,12 @@ Find the links and add the markup if needed. Default to false.
 Apply the typographical fixes. Default to false. This add the "smart
 quotes" feature.
 
+=head3 remove_nbsp
+
+Remove all the non-break spaces in the document, unconditionally. This
+options does not conflict with the following. If both are provided,
+first the non-break spaces are removed, then reinserted.
+
 =head3 fix_nbsp
 
 Add non-break spaces where appropriate (whatever this means).
@@ -118,6 +124,7 @@ sub new {
                 fix_links       => 0,
                 fix_typography  => 0,
                 fix_footnotes   => 0,
+                remove_nbsp     => 0,
                 fix_nbsp        => 0,
                 debug  => 0,
                 input  => undef,
@@ -145,6 +152,10 @@ sub fix_links {
 
 sub fix_typography {
     return shift->{fix_typography};
+}
+
+sub remove_nbsp {
+    return shift->{remove_nbsp};
 }
 
 sub fix_nbsp {
@@ -206,6 +217,7 @@ sub process {
     my ($filter, $specific_filter, $nbsp_filter);
     my $fixlinks = $self->fix_links;
     my $fixtypo = $self->fix_typography;
+    my $remove_nbsp = $self->remove_nbsp;
     my $lang = $self->_get_lang;
 
     if ($lang && $fixtypo) {
@@ -244,6 +256,9 @@ sub process {
         $line =~ s/\x{fb02}/fl/g;
         $line =~ s/\x{fb03}/ffi/g;
         $line =~ s/\x{fb04}/ffl/g;
+        if ($remove_nbsp) {
+            $line =~ s/\x{a0}/ /g;
+        }
         if ($fixtypo) {
             $line =~ s/(?<=\.) (?=\.)//g; # collapse the dots
         }
