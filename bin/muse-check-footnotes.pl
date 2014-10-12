@@ -21,6 +21,5 @@ foreach my $file (@ARGV) {
         else {
             print "$file: found: $error->{footnotes} references: $error->{references}\n";
         }
-
     }
 }

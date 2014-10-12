@@ -2,6 +2,9 @@
 use strict;
 use warnings;
 use Pod::Usage;
+use Text::Amuse::Preprocessor::Footnotes;
+use Getopt::Long;
+use File::Copy qw/move/;
 
 =head1 NAME
 
@@ -9,11 +12,13 @@ muse-rearrange-footnotes.pl
 
 =head1 DESCRIPTION
 
-This script takes a file as argument, and rearrange the footnotes
-numbering, barfing if the footnotes found in the body don't match the
-footnotes themselves. This is handy if you inserted footnotes at
-random position, or if the footnotes are numbered by section or
-chapter.
+This script takes an arbitrary number of files as argument, and
+rearrange the footnotes numbering, barfing if the footnotes found in
+the body don't match the footnotes themselves. This is handy if you
+inserted footnotes at random position, or if the footnotes are
+numbered by section or chapter.
+
+The only thing that matters is the B<order>.
 
 Example input file content:
 
@@ -36,7 +41,7 @@ Output in file with C<.fixed> extension:
   
   [3] third
   
-The original file is never overwritten.
+The original file is overwritten if the option --overwrite is provided.
 
 =head1 SYNOPSIS
 
@@ -44,73 +49,37 @@ The original file is never overwritten.
 
 =head1 SEE ALSO
 
-L<Text::Amuse::Preprocessor>
+L<Text::Amuse::Preprocessor::Footnotes>
 
 =cut
 
-my $filename = shift;
+my $overwrite;
 
-die pod2usage("Please pass a file.muse as argument\n") unless $filename;
+GetOptions(overwrite => \$overwrite) or die;
 
-die pod2usage("$filename doesn't exist\n")      unless -e $filename;
-die pod2usage("$filename is not a text file\n") unless -T $filename;
+die pod2usage("Please one or more muse file as arguments\n") unless @ARGV;
 
-my $outputfile = $filename . ".fixed" ; 
-print "Processing $filename, I'll output on $outputfile\n Please double check the result\n";
-
-open(my $in, "<", $filename) or die "Cannot open $filename, $!\n";
-
-# read the file.
-my $fn_counter = 0; 
-my $body_fn_counter = 0;
-my $last_was_fn = 0;
-my @fnotes;
-my @orig_body;
-
-while (my $r = <$in>) {
-	if ($r =~ m/^\s*\[\d+\]\s*/) {
-		$r =~ s/^\s*\[\d+\]/"[" . ++$fn_counter . "]"/e;
-		# the footnotes at the end go in a separate array
-		push @fnotes, $r;
-        $last_was_fn = 1;
+foreach my $file (@ARGV) {
+    my $output = $file . ".fixed";
+    my $pp = Text::Amuse::Preprocessor::Footnotes->new(input => $file,
+                                                       output => $output);
+    $pp->process;
+    if (my $error = $pp->error) {
+        print "Error $file: found footnotes: $error->{footnotes} "
+          . "($error->{footnotes_found})\n"
+            . "found references: $error->{references} "
+              . "($error->{references_found})\n\n";
         next;
-	}
-
-    # check if we have a broken footnote and skip the first empty line
-    # after that.
-    if ($last_was_fn) {
-        if ($r =~ m/^\s*$/) {
-            $last_was_fn = 0;
-            next;
-        }
-        else {
-            die "Broken footnote detected: " . $fnotes[$#fnotes];
-        }
     }
-
-    # then process the page
-    $r =~ s/\[\d{1,4}\]/"[" . ++$body_fn_counter . "]"/ge;
-    push @orig_body, $r; 
+    elsif (! -f $output) {
+        die "$output not produced, this shouldn't happen!\n";
+    }
+    if ($overwrite) {
+        move $output, $file or die "Cannot move $output into $file: $!";
+    }
+    else {
+        print "Output left in $output\n";
+    }
 }
 
-close $in;
-
-if ($body_fn_counter != $fn_counter) {
-    warn "Counter mismatch: body has $body_fn_counter reference, " 
-      . "but $fn_counter footnotes found\n";
-    $outputfile .= ".broken.muse";
-    warn "Output on $outputfile\n";
-}
-
-
-# write the body file
-open(my $out, ">", $outputfile) or die "I cannot open $outputfile, $!";
-
-while (@orig_body) {
-	print $out shift(@orig_body);
-}
-while (@fnotes) {
-	print $out shift(@fnotes), "\n";
-}
-close $out;
 
