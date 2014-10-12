@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 15 * 2;
+use Test::More tests => 33;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -116,6 +116,32 @@ test_strings("Full example",
              read_file(catfile(qw/t testfiles full.in.muse/)),
              read_file(catfile(qw/t testfiles full.out.muse/)),
              1, 1, 1, 1);
+
+my $broken_in = <<MUSE;
+#title test
+#lang en
+
+"hello" [1] 'hullo'
+
+[1] a
+[1] b
+[1] c
+MUSE
+
+my $broken_out = '';
+my $bpp = Text::Amuse::Preprocessor->new(input => \$broken_in,
+                                         output => \$broken_out,
+                                         fix_links => 1,
+                                         fix_typography => 1,
+                                         fix_footnotes => 1);
+ok (!$bpp->process, "Failure");
+is ($broken_out, '', "No output");
+is_deeply ($bpp->error, {
+                         footnotes => 3,
+                         references => 1,
+                         footnotes_found => '[1] [1] [1]',
+                         references_found => '[1]',
+                        });
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $nbsp, $fn) = @_;
