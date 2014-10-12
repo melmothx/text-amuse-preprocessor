@@ -135,10 +135,11 @@ sub new {
             $self->{$k} = delete $options{$k};
         }
     }
-    die "Unrecognized option: " . join(keys %options) . "\n" if %options;
-
     $self->{_error} = '';
-    die "Unrecognized options: " . join(" ", keys %options) if %options;
+
+    die "Unrecognized option: " . join(' ', keys %options) . "\n" if %options;
+    die "Missing input" unless defined $self->{input};
+    die "Missing output" unless defined $self->{output};
     bless $self, $class;
 }
 
@@ -319,7 +320,7 @@ sub _write_file {
 sub _read_file {
     my ($self, $file) = @_;
     die unless $file;
-    open (my $fh, '<:encoding(UTF-8)', $file) or die $!;
+    open (my $fh, '<:encoding(UTF-8)', $file) or die "$file: $!";
     local $/ = undef;
     my $body = <$fh>;
     close $fh;
