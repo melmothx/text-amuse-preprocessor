@@ -70,7 +70,7 @@ The input file. It must exists.
 =head3 output
 
 The output file. It will be written by the module if the parsing
-succeedes.
+succeedes. If not specified, the module will run in dry-run mode.
 
 =head3 debug
 
@@ -88,7 +88,7 @@ following keys will be returned:
 
 =over 4
 
-=item reference
+=item references
 
 The total number of footnote references in the body.
 
@@ -123,9 +123,9 @@ sub new {
     }
     $self->{_error} = '';
 
-    die "Unrecognized option: " . join(keys %options) . "\n" if %options;
+    die "Unrecognized option: " . join(' ', keys %options) . "\n" if %options;
     die "Missing input" unless defined $self->{input};
-    die "Missing output" unless defined $self->{output};
+    # output is no checked.
     bless $self, $class;
 }
 
@@ -185,73 +185,52 @@ sub process {
     # auxiliary files
     my $tmpdir = $self->tmpdir;
     print "Using $tmpdir\n" if $self->debug;
-    my $body_file  = File::Spec->catfile($tmpdir, 'body.muse');
-    my $fn_file    = File::Spec->catfile($tmpdir, 'fn.muse');
-    # open the auxiliary files
-    open (my $body_fh, '>:encoding(UTF-8)', $body_file) or die ("$body_file $!");
-    open (my $fn_fh, '>:encoding(UTF-8)', $fn_file) or die ("$fn_file $!");
+    my $auxfile  = File::Spec->catfile($tmpdir, 'fixed.muse');
+    # open the auxiliary file
+    open (my $out, '>:encoding(UTF-8)', $auxfile)
+      or die ("can't open $auxfile $!");
 
-    # open the input
-    my $in_file = $self->input;
-    open (my $in, '<:encoding(UTF-8)', $in_file) or die ("$in_file $!");
+    my $infile   = $self->input;
+    open (my $in, '<:encoding(UTF-8)', $infile)
+      or die ("can't open $infile $!");
     
     # read the file.
     my $fn_counter = 0; 
     my $body_fn_counter = 0;
-    my $last_was_fn = undef;
-
+    my $last_was_blank;
     my $fn_re = $self->_fn_re;
     my $ref_re = $self->_ref_re;
     while (my $r = <$in>) {
+
         # a footnote
-        if ($r =~ s/$fn_re/'[' . ++$fn_counter . ']'/e) {
-            # the footnotes at the end go in a separate array
-            print $fn_fh $r;
-            $last_was_fn = $r;
-            next;
+        if ($last_was_blank and
+            $r =~ s/$fn_re/'[' . ++$fn_counter . ']'/e) {
+            $last_was_blank = 0;
         }
 
-        # check if we have a broken footnote and skip the first empty line
-        # after that.
-        if (defined $last_was_fn) {
-
-            # if an empty linke, flip the switch
-            if ($r =~ m/^\s*$/) {
-                $last_was_fn = undef;
-                $r = "\n";
-            }
-            print $fn_fh $r;
-            next;
+        # a blank line
+        elsif ($r =~ m/^\s*$/) {
+            $last_was_blank = 1;
         }
 
-        # then process the page
-        $r =~ s/$ref_re/'[' . ++$body_fn_counter . ']'/ge;
-        print $body_fh $r;
+        # default
+        else {
+            $last_was_blank = 0;
+            $r =~ s/$ref_re/'[' . ++$body_fn_counter . ']'/ge;
+        }
+
+        # save
+        print $out $r;
     }
 
-    close $in      or die $!;
-    close $body_fh or die $!;
-    close $fn_fh   or die $!;
+    close $in  or die $!;
+    close $out or die $!;
 
     if ($body_fn_counter == $fn_counter) {
-        # all good.
-        open ($body_fh, '<', $body_file)
-          or die ("$body_file $!");
-        open ($fn_fh, '<', $fn_file)
-          or die ("$fn_file $!");
-        open (my $out, '>', $self->output)
-          or die $self->output . ": $!";
-        while (<$body_fh>) {
-            print $out $_;
+        if (my $outfile = $self->output) {
+            copy $auxfile, $outfile or die "Cannot copy $auxfile to $outfile $!";
+            return $outfile;
         }
-        while (<$fn_fh>) {
-            print $out $_;
-        }
-        close $body_fh or die $!;
-        close $fn_fh   or die $!;
-        close $out     or die $!;
-        print "Output in " . $self->output . "\n" if $self->debug;
-        return $self->output;
     }
     else {
         $self->_report_error($body_fn_counter, $fn_counter);
@@ -268,10 +247,20 @@ sub _report_error {
     open (my $in, '<:encoding(UTF-8)', $in_file) or die ("$in_file $!");
     my @footnotes;
     my @references;
+    my $last_was_blank;
     while (my $line = <$in>) {
-        if ($line =~ m/$fn_re/) {
-            push @footnotes, $&;
+        if ($last_was_blank) {
+            if ($line =~ m/$fn_re/) {
+                push @footnotes, $&;
+                next;
+            }
+        }
+        if ($line =~ m/^\s*$/) {
+            $last_was_blank = 1;
             next;
+        }
+        else {
+            $last_was_blank = 0;
         }
         while ($line =~ m/$ref_re/g) {
             push @references, $&;
@@ -279,7 +268,7 @@ sub _report_error {
     }
     close $in;
     $self->_set_error({
-                       reference => $body_fn_counter,
+                       references => $body_fn_counter,
                        footnotes => $fn_counter,
                        references_found => join(" ", @references),
                        footnotes_found  => join(" ", @footnotes),

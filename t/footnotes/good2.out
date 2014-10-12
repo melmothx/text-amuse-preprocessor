@@ -1,10 +1,19 @@
 #lang hr
+#title test
 
 bla [1] bla [2] bla [3] bla [4] bla [5] bla [6] bla [7] bla [8]
 bla [9] bla [10] bla [11] bla [12] bla [13] bla [14] bla [15] bla [16]
 bla [17] bla [18] bla [19] bla [20] bla [21] bla [22] bla [23]
 bla [24] bla [25] bla [26] bla [27] bla [28] bla [29] bla [30]
 bla [31] bla [32] bla [33] bla [34] bla [35] bla [36] bla [37]
+
+[1] blablabla
+blablbla
+blablbla inside the ààblock
+
+[2] blablabla
+blablbla inside the ààblock
+
 bla [38] bla [39] bla [40] bla [41] bla [42] bla [43] bla [44]
 bla [45] bla [46] bla [47] bla [48] bla [49] bla [50] bla [51]
 bla [52] bla [53] bla [54] bla [55] bla [56] bla [57] bla [58]
@@ -29,12 +38,6 @@ bla [178] bla [179] bla [180] bla [181] bla [182] bla [183] bla [184]
 bla [185] bla [186] bla [187] bla [188] bla [189] bla [190] bla [191]
 bla [192] bla [193] bla [194] bla [195] bla [196] bla [197] bla [198]
 bla [199] bla [200]
-
-[1] blablabla
-blablbla
-
-[2] blablabla
-blablbla
 
 [3] blablabla
 blablbla

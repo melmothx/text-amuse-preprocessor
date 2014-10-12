@@ -8,14 +8,14 @@ use File::Spec::Functions qw/catfile catdir/;
 use Text::Amuse::Preprocessor;
 use Text::Amuse::Preprocessor::Footnotes;
 
-use Test::More tests => 12;
+use Test::More tests => 15;
 use Data::Dumper;
 
 my $out = catfile(qw/t footnotes out.muse/);
 
 my $pp;
 
-foreach my $good (qw/good good2/) {
+foreach my $good (qw/good good2 good-3/) {
     my $input    = catfile(qw/t footnotes/, $good . '.in');
     my $expected = catfile(qw/t footnotes/, $good . '.out');
     diag "Testing $input => $expected";
@@ -38,7 +38,7 @@ $pp = Text::Amuse::Preprocessor::Footnotes->new(output => $out,
 ok (!$pp->process, "No success");
 ok (! -f $out, "$out not written");
 is_deeply ($pp->error, {
-                        reference => 3,
+                        references => 3,
                         footnotes => 2,
                         references_found => '[1] [2] [4]',
                         footnotes_found  => '[1] [1]',
@@ -53,7 +53,7 @@ $pp = Text::Amuse::Preprocessor::Footnotes->new(output => $out,
 ok (!$pp->process, "No success");
 ok (! -f $out, "$out not written");
 is_deeply ($pp->error, {
-                        reference => 3,
+                        references => 3,
                         footnotes => 4,
                         references_found => '[1] [2] [4]',
                         footnotes_found  => '[1] [1] [4] [5]',

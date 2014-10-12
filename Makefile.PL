@@ -23,6 +23,7 @@ WriteMakefile(
     },
     EXE_FILES => [
         'bin/muse-rearrange-footnotes.pl',
+        'bin/muse-check-footnotes.pl',
         'bin/html-to-muse.pl',
        ],
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

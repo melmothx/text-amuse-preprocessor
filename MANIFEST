@@ -1,4 +1,5 @@
 bin/html-to-muse.pl
+bin/muse-check-footnotes.pl
 bin/muse-rearrange-footnotes.pl
 Changes
 lib/Text/Amuse/Preprocessor.pm
@@ -16,6 +17,8 @@ t/common.t
 t/footnotes.t
 t/footnotes/bad.muse
 t/footnotes/bad2.muse
+t/footnotes/good-3.in
+t/footnotes/good-3.out
 t/footnotes/good.in
 t/footnotes/good.out
 t/footnotes/good2.in
