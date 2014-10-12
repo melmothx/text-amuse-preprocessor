@@ -14,6 +14,8 @@ t/changes.t
 t/chars.t
 t/common.t
 t/footnotes.t
+t/footnotes/bad.muse
+t/footnotes/bad2.muse
 t/footnotes/expected.muse
 t/footnotes/good.muse
 t/html.t
