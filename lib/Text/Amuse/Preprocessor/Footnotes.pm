@@ -143,7 +143,7 @@ sub output {
 
 =head2 error
 
-Return a string with the errors caught, an empty string otherwise.
+Return a string with the errors caught, undef otherwise.
 
 =cut
 
@@ -189,7 +189,6 @@ sub process {
     # read the file.
     my $fn_counter = 0; 
     my $body_fn_counter = 0;
-    my $last_was_blank;
     my @footnotes_found;
     my @references_found;
     while (my $r = <$in>) {
@@ -223,6 +222,7 @@ sub process {
             return $outfile;
         }
         else {
+            # dry run, just state success
             return 1;
         }
     }
