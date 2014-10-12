@@ -16,7 +16,7 @@ foreach my $file (@ARGV) {
     $pp->process;
     if (my $error = $pp->error) {
         if ($verbose) {
-            print "file: " . Dumper($error);
+            print "$file: " . Dumper($error);
         }
         else {
             print "$file: found: $error->{footnotes} references: $error->{references}\n";

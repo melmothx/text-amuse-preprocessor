@@ -171,14 +171,6 @@ sub tmpdir {
     return $self->{_tmpdir}->dirname;
 }
 
-sub _fn_re {
-    return qr/^\[[0-9]{1,4}\](?=\s)/;
-}
-
-sub _ref_re {
-    return qr/\[[0-9]{1,4}\]/;
-}
-
 sub process {
     my $self = shift;
     print Dumper($self) if $self->debug;
@@ -198,28 +190,27 @@ sub process {
     my $fn_counter = 0; 
     my $body_fn_counter = 0;
     my $last_was_blank;
-    my $fn_re = $self->_fn_re;
-    my $ref_re = $self->_ref_re;
+    my @footnotes_found;
+    my @references_found;
     while (my $r = <$in>) {
 
         # a footnote
-        if ($last_was_blank and
-            $r =~ s/$fn_re/'[' . ++$fn_counter . ']'/e) {
-            $last_was_blank = 0;
+        if ($r =~ s/^
+                    \[
+                    ([0-9]+)
+                    \]
+                    (?=\s)/_check_and_replace_fn($1,
+                                                 \$fn_counter,
+                                                 \@footnotes_found)/xe) {
+            # nothing to do
         }
-
-        # a blank line
-        elsif ($r =~ m/^\s*$/) {
-            $last_was_blank = 1;
-        }
-
-        # default
         else {
-            $last_was_blank = 0;
-            $r =~ s/$ref_re/'[' . ++$body_fn_counter . ']'/ge;
+            $r =~ s/\[
+                    ([0-9]+)
+                    \]/_check_and_replace_fn($1,
+                                             \$body_fn_counter,
+                                             \@references_found)/gxe;
         }
-
-        # save
         print $out $r;
     }
 
@@ -231,50 +222,35 @@ sub process {
             copy $auxfile, $outfile or die "Cannot copy $auxfile to $outfile $!";
             return $outfile;
         }
+        else {
+            return 1;
+        }
     }
     else {
-        $self->_report_error($body_fn_counter, $fn_counter);
+        $self->_set_error({
+                           references => $body_fn_counter,
+                           footnotes => $fn_counter,
+                           references_found => join(" ",
+                                                    map { "[$_]" }
+                                                    @references_found),
+                           footnotes_found  => join(" ",
+                                                     map { "[$_]" }
+                                                     @footnotes_found),
+                          });
         return;
     }
 }
 
-sub _report_error {
-    my ($self, $body_fn_counter, $fn_counter) = @_;
-    my $fn_re = $self->_fn_re;
-    my $ref_re = $self->_ref_re;
-    # reopen and rescan
-    my $in_file = $self->input;
-    open (my $in, '<:encoding(UTF-8)', $in_file) or die ("$in_file $!");
-    my @footnotes;
-    my @references;
-    my $last_was_blank;
-    while (my $line = <$in>) {
-        if ($last_was_blank) {
-            if ($line =~ m/$fn_re/) {
-                push @footnotes, $&;
-                next;
-            }
-        }
-        if ($line =~ m/^\s*$/) {
-            $last_was_blank = 1;
-            next;
-        }
-        else {
-            $last_was_blank = 0;
-        }
-        while ($line =~ m/$ref_re/g) {
-            push @references, $&;
-        }
+sub _check_and_replace_fn {
+    my ($number, $current, $list) = @_;
+    if ($number < ($$current + 100)) {
+        push @$list, $number;
+        return '[' . ++$$current . ']';
     }
-    close $in;
-    $self->_set_error({
-                       references => $body_fn_counter,
-                       footnotes => $fn_counter,
-                       references_found => join(" ", @references),
-                       footnotes_found  => join(" ", @footnotes),
-                      });
+    else {
+        return '[' . $number . ']';
+    }
 
 }
-
 
 1;
