@@ -155,6 +155,18 @@ sub characters {
                    endash  => "\x{2013}",
                    dash    => "\x{2014}",
                   },
+            # http://de.wikipedia.org/wiki/Halbgeviertstrich
+            # http://en.wikipedia.org/wiki/International_variation_in_quotation_marks#German_.28Germany_and_Austria.29
+            de => {
+                   ldouble => "\x{201e}",
+                   rdouble => "\x{201c}",
+                   lsingle => "\x{201a}",
+                   rsingle => "\x{2018}",
+                   apos    => "\x{2019}",
+                   emdash  => "\x{2013}",
+                   endash  => "\x{2013}",
+                   dash    => "\x{2013}",
+                  },
            };
 }
 

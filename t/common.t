@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 35;
+use Test::More tests => 37;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -101,7 +101,7 @@ my $original_expected = $expected;
 
 test_strings(links => $input, $expected, 0, 1, 0);
 
-foreach my $lang (qw/en fi es sr hr ru it mk se/) {
+foreach my $lang (qw/en fi es sr hr ru it mk se de/) {
     test_lang($lang);
 }
 

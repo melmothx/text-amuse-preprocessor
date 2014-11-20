@@ -1,5 +1,9 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.22 2014-11-20
+ - Added support for swedish
+ - Added support for german
+
 0.21 2014-10-12
  - Fixed indexing of Text::Amuse::Preprocessor::Typography (deprecated)
 
