@@ -40,7 +40,7 @@ our $VERSION = '0.22';
                                          );
   $pp->process;
 
-=head1 DESCRIPTIONS
+=head1 DESCRIPTION
 
 This module provides a solution to apply some common fixes to muse
 files.
@@ -51,6 +51,54 @@ returns, replace character ligatures or characters which shouldn't
 enter at all and expand the tabs to 4 spaces (no smart expanding).
 
 The source is pretty much commented.
+
+=head1 LANGUAGE SUPPORT
+
+The following languages are supported
+
+=over 4
+
+=item english
+
+smart quotes, dashes, and the common superscripts (like 11th)
+
+=item russian
+
+smart quotes, dashes and non-breaking spaces
+
+=item spanish
+
+smart quotes and dashes
+
+=item finnish
+
+smart quotes and dashes
+
+=item swedish
+
+smart quotes and dashes
+
+=item serbian
+
+smart quotes and dashes
+
+=item croatian
+
+smart quotes and dashes
+
+=item italian
+
+smart quotes and dashes
+
+=item macedonian
+
+smart quotes and dashes
+
+=item german
+
+smart quotes and dashes
+
+=back
 
 =head1 ACCESSORS
 
