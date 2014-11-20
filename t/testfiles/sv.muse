@@ -1,4 +1,4 @@
-#lang se
+#lang sv
 
 common: fi fl ffi ffl ff fi fl ffi ffl ff
 

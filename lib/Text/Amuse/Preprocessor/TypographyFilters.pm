@@ -76,7 +76,7 @@ sub characters {
                    dash =>    "\x{2014}",
                   },
             # according to http://en.wikipedia.org/wiki/International_variation_in_quotation_marks#Finnish_and_Swedish
-            se => {
+            sv => {
                    ldouble => "\x{201d}",
                    rdouble => "\x{201d}",
                    lsingle => "\x{2019}",
