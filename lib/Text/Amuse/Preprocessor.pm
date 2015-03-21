@@ -19,11 +19,11 @@ Text::Amuse::Preprocessor - Helpers for Text::Amuse document formatting.
 
 =head1 VERSION
 
-Version 0.23
+Version 0.24
 
 =cut
 
-our $VERSION = '0.23';
+our $VERSION = '0.24';
 
 
 =head1 SYNOPSIS
@@ -311,6 +311,9 @@ sub process {
         $line =~ s/\x{fb02}/fl/g;
         $line =~ s/\x{fb03}/ffi/g;
         $line =~ s/\x{fb04}/ffl/g;
+        # remove soft-hyphens + space. They are invisible in browsers
+        # and sometimes even on the console
+        $line =~ s/\x{ad}\s*//g;
         if ($remove_nbsp) {
             $line =~ s/\x{a0}/ /g;
         }

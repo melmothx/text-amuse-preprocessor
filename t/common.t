@@ -20,6 +20,8 @@ U+FB01	ﬁ	ef ac 81	LATIN SMALL LIGATURE FI       ﬁ
 U+FB02	ﬂ	ef ac 82	LATIN SMALL LIGATURE FL       ﬂ
 U+FB03	ﬃ	ef ac 83	LATIN SMALL LIGATURE FFI      ﬃ
 U+FB04	ﬄ	ef ac 84	LATIN SMALL LIGATURE FFL      ﬄ
+ruina­no gli alberi ruina­no gli alberi deve esse­ re negato esse­ re negato
+hello-there
 INPUT
 
 my $expected = <<'OUT';
@@ -28,6 +30,8 @@ U+FB01    fi    ef ac 81    LATIN SMALL LIGATURE FI       fi
 U+FB02    fl    ef ac 82    LATIN SMALL LIGATURE FL       fl
 U+FB03    ffi    ef ac 83    LATIN SMALL LIGATURE FFI      ffi
 U+FB04    ffl    ef ac 84    LATIN SMALL LIGATURE FFL      ffl
+ruinano gli alberi ruinano gli alberi deve essere negato essere negato
+hello-there
 OUT
 
 test_strings(ligatures => $input, $expected);
