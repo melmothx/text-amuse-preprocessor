@@ -1,5 +1,6 @@
 bin/html-to-muse.pl
 bin/muse-check-footnotes.pl
+bin/muse-preprocessor.pl
 bin/muse-rearrange-footnotes.pl
 Changes
 lib/Text/Amuse/Preprocessor.pm

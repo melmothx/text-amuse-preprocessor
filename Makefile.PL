@@ -25,6 +25,7 @@ WriteMakefile(
         'bin/muse-rearrange-footnotes.pl',
         'bin/muse-check-footnotes.pl',
         'bin/html-to-muse.pl',
+        'bin/muse-preprocessor.pl',
        ],
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Text-Amuse-Preprocessor-*' },
