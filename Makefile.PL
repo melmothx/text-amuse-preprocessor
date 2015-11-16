@@ -18,7 +18,7 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
-        'IO:HTML' => 1,
+        'IO::HTML' => 1,
         'HTML::PullParser' => 0,
         'Text::Amuse' => '0.15',
     },
