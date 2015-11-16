@@ -38,35 +38,6 @@ needed if there are tables or complicated structures.
 use IO::HTML qw/html_file/;
 use HTML::PullParser;
 
-my %microshitreplace = (
-	'&#130;' => '&#8218;',
-	'&#131;' => '&#402;',
-	'&#132;' => '&#8222;',
-	'&#133;' => '&#8230;',
-	'&#134;' => '&#8224;',
-	'&#135;' => '&#8225;',
-	'&#136;' => '&#710;',
-	'&#137;' => '&#8240;',
-	'&#138;' => '&#352;',
-	'&#139;' => '&#8249;',
-	'&#140;' => '&#338;',
-	'&#145;' => '&#8216;',
-	'&#146;' => '&#8217;',
-	'&#147;' => '&#8220;',
-	'&#148;' => '&#8221;',
-	'&#149;' => '&#8226;',
-	'&#150;' => '&#8211;',
-	'&#151;' => '&#8212;',
-	'&#152;' => '&#732;',
-	'&#153;' => '&#8482;',
-	'&#154;' => '&#353;',
-	'&#155;' => '&#8250;',
-	'&#156;' => '&#339;',
-	'&#159;' => '&#376;',
-);
-
-
-
 my %preserved = (
 		 "em" => ["<em>", "</em>"],
 		 "i"  => ["<em>", "</em>"],
@@ -121,34 +92,10 @@ The first argument must be a filename.
 =cut
 
 sub html_to_muse {
-  my ($rawtext, $debug) = @_;
+  my ($rawtext) = @_;
   return unless defined $rawtext;
-  # preliminary cleaning
-  $rawtext =~ s!\t! !gs; # tabs are evil
-  $rawtext =~ s!\r! !gs; # \r is evil
-  $rawtext =~ s!\n! !gs;
-
   # pack the things like hello<em> there</em> with space. Be careful
   # with recursions.
-  my $recursion = 0;
-  while (($rawtext =~ m!( </|<[^/]+?> )!) && ($recursion < 20)) {
-    $rawtext =~ s!( +)(</.*?>)!$2$1!g;
-    $rawtext =~ s!(<[^/]*?>)( +)!$2$1!g;
-    $recursion++;
-  }
-  undef $recursion;
-  $rawtext =~ s/ +$//gm;
-  $rawtext =~ s/^ +//gm;
-  $rawtext =~ s!  +! !g;
-  # clear text around <br> 
-  $rawtext =~ s! *<br ?/?> *!<br />!g;
-  return unless $rawtext;
-  # first clean up the legacy M$ entities, maybe not needed.
-  foreach my $string (keys %microshitreplace) {
-    my $tostring = $microshitreplace{$string};
-    $rawtext =~ s/\Q$string\E/$tostring/g;
-  }
-  warn $rawtext if $debug;
   return _html_to_muse(\$rawtext);
 }
 
@@ -184,12 +131,15 @@ sub _html_to_muse {
   my @spanpile;
   my @lists;
   my @parspile;
+  my @tagpile = ('root');
+  my $current = '';
   while (my $token = $p->get_token) {
     my $type = shift @$token;
-
     # starttag?
     if ($type eq 'S') {
       my $tag = shift @$token;
+      push @tagpile, $tag;
+      $current = $tag;
       my $attr = shift @$token;
       # see if processing of span or font are needed
       if (($tag eq 'span') or ($tag eq 'font')) {
@@ -232,7 +182,13 @@ sub _html_to_muse {
 
     # stoptag?
     elsif ($type eq 'E') {
+      $current = '';
       my $tag = shift @$token;
+      my $expected = pop @tagpile;
+      if ($expected ne $tag) {
+        warn "tagpile mismatch: $expected, $tag\n";
+      }
+
       if (($tag eq 'span') or ($tag eq 'font')) {
 	$tag = pop @spanpile;
       }
@@ -260,9 +216,19 @@ sub _html_to_muse {
     # regular text
     elsif ($type eq 'T') {
       my $line = shift @$token;
-      unless ($line =~ m/^[ \x{a0}]*$/s) {
-	$line =~ s/ / /g; # Word &C. (and CKeditor), love the no-break space.
-	# but preserve it it's only whitespace in the line.
+      # Word &C. (and CKeditor), love the no-break space.
+      # but preserve it it's only whitespace in the line.
+      $line =~ s/\r//gs;
+      $line =~ s/\t/    /gs;
+      # at the beginning of the tag
+      if ($current =~ m/^(p|div)$/) {
+        if ($line =~ m/\A\s*([\x{a0} ]+)\s*\z/) {
+          $line = "\n<br>\n";
+        }
+      }
+      $line =~ s/\x{a0}/ /gs;
+      if ($current =~ m/^(h[1-6]|li|ul|ol|p|div)$/) {
+        $line =~ s/^\s+//gms;
       }
       push @textstack, $line;
     } else {
@@ -270,8 +236,6 @@ sub _html_to_muse {
     }
   }
   my $parsed = join("", @textstack);
-  $parsed =~ s/ +$//gm;
-  $parsed =~ s/\n\n\n+/\n\n/gs;
   # clean the footnotes.
   $parsed =~ s!\[
 	       \[
@@ -286,7 +250,20 @@ sub _html_to_muse {
 	       \] # close 
 	       \] # close
 	      ![$3]!gx;
-  # add a space if missing
+
+  # add a newline if missing
+#  unless ($parsed =~ m/\n\z/) {
+#    $parsed .= "\n";
+#  }
+  my $recursion = 0;
+  while (($parsed =~ m!( </|<[^/]+?> )!) && ($recursion < 20)) {
+    $parsed =~ s!( +)(</.*?>)!$2$1!g;
+    $parsed =~ s!(<[^/]*?>)( +)!$2$1!g;
+    $recursion++;
+  }
+  $parsed =~ s/(?<=\S) +(?=\S)/ /g;
+  $parsed =~ s/ +$//gms;
+  $parsed =~ s/\n\n\n+/\n\n/gs;
   return $parsed;
 }
 

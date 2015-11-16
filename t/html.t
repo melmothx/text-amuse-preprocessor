@@ -23,7 +23,7 @@ binmode $builder->todo_output,    ":utf8";
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 BEGIN { use_ok('Text::Amuse::Preprocessor::HTML') };
 
 #########################
@@ -44,12 +44,19 @@ is(html_to_muse($html),
 
 is(html_to_muse('<pre>hello</pre>'), "\n<example>\nhello\n</example>\n");
 
+is(html_to_muse("<pre>hello\nworld\n\nhello</pre>"), "\n<example>\nhello\nworld\n\nhello\n</example>\n");
+
 
 $html = "
 <p>
 	&nbsp;</p>
 <h1>
-	This is a test</h1>
+	This is
+
+
+
+
+ a test</h1>
 <p>
 	&nbsp;</p>
 <p>
@@ -104,15 +111,16 @@ $html = "
 
 my $expected = '
 
- 
+<br>
 
-* This is a test
+* This is
+a test
 
- 
+<br>
 
 Hello «there», with àææł€¶¼½ßðđ some unicode
 
- 
+<br>
 
 <quote>
 
@@ -134,13 +142,13 @@ and
 
  - another
 
-A sub <sub>subscript </sub> and a <sup>superscript </sup> a <del>strikeover</del> an <em>emphasis </em> a <strong>double one </strong> and the <em><strong>bold italic</strong></em>.
+A sub <sub>subscript</sub> and a <sup>superscript</sup> a <del>strikeover</del> an <em>emphasis</em> a <strong>double one</strong> and the <em><strong>bold italic</strong></em>.
 
- 
+<br>
 
 * Then the
 
- 
+<br>
 
 ** third
 
@@ -148,11 +156,11 @@ A sub <sub>subscript </sub> and a <sup>superscript </sup> a <del>strikeover</del
 
 **** fifth
 
- 
+<br>
 
 ***** sixst
 
- 
+<br>
 
 finally finished
 
@@ -174,12 +182,13 @@ $expected = "\n\nI'd been in town for about 24 hours when I got to the anarchist
 
 compare_two_long_strings($html, $expected, "links");
 
-compare_two_long_strings("<html> <head><title>hello</title><body> <em> <strong> Hello </strong></em> </body></html>",
-			 "hello <em><strong>Hello</strong></em>",
+compare_two_long_strings("<html> <head><title>hello</title></head><body> <em> <strong> Hello </strong></em> </body></html>",
+			 " hello <em><strong>Hello</strong></em>",
 			 "testing simple random tags");
 
 
 $html =<< 'EOF';
+<div>
 <blockquote class="bb-quote-body">Hi [REDACTED].<br />
 I am writing to you on behalf of the 2012 NYC Anarchist Book fair Safe(r) Space Group to let you know that a request has been made that you not attend this year. The policy at the event, posted at http://www.anarchistbookfair.net/saferspace, is in place to create a supportive, non-threatening environment for all. This means that anyone may be asked to not attend. <span style="font-style:italic"><span style="font-weight:bold">No blame is placed, no decision is made</span></span>, we simply ask that you not attend to prevent anyone from feeling unsafe.<br />
 We understand that being asked not to attend is not easy, and we don’t take it lightly. You may not know why you are being asked not to attend or who all is requesting this, or you may feel the situation is totally unfair. Our goal is not to decide right or wrong but to maintain safety at the fair. Some situations are gray and sometimes based on simple misunderstandings, but regardless of the reasons, no matter what your defense, we still ask that you not attend this years book fair. Not attending is not an admission of guilt. In fact, you not attending is a statement that you respect everyone’s safety at the fair and are taking a positive step to uphold that principle.<br />
@@ -192,6 +201,7 @@ Thanks for helping us keep it safe,<br />
 EOF
 
 $expected =<< 'EOF';
+
 
 <quote>
 Hi [REDACTED].
@@ -218,9 +228,9 @@ compare_two_long_strings($html, $expected, "<span thing>");
 compare_two_long_strings("<sup>1</sup>", "<sup>1</sup>", "sup");
 
 compare_two_long_strings(
-			 "<i> <b> 1 </b> </i> <i> <b> 1 </b> </i>",
-			 "<em><strong>1</strong></em>" . " " .
-			 "<em><strong>1</strong></em>",
+			 "<div><i> <b> 1 </b> </i> <i> <b> 1 </b> </i></div>",
+			 "\n\n  <em><strong>1</strong></em>" . " " .
+			 "<em><strong>1</strong></em>\n\n",
 			"i and b");
 
 
@@ -258,8 +268,8 @@ MUSE
 
 compare_two_long_strings($html, $expected, "lists and urls");
 
-$html = "Hadsonovim <i>Zelenim dvorima[[#_ftn10][<b>[10]</b>]]</i>";
-$expected = "Hadsonovim <em>Zelenim dvorima[10]</em>";
+$html =     "<div>Hadsonovim <i>Zelenim dvorima[[#_ftn10][<b>[10]</b>]]</i></div>";
+$expected = "\n\nHadsonovim <em>Zelenim dvorima[10]</em>\n\n";
 
 compare_two_long_strings($html, $expected, "Footnote");
 			 
@@ -284,13 +294,13 @@ $expected =<< 'MUSE';
 
 Dobbiamo imparare a mordere, e mordere a fondo!
 
- 
+<br>
 
 <right>
 [<em>The Alarm</em>, Chicago, Vol. 1, n. 3 del dicembre 1915]
 </right>
 
- 
+<br>
 
 MUSE
 
@@ -318,9 +328,13 @@ $expected =<< 'MUSE';
 <em>rifiutando in ogni occasione e su tutti i piani di cedere»</em>
 </center>
 
+<br>
+
 <center>
 <em>rifiutando in ogni occasione e su tutti i piani di cedere»</em>
 </center>
+
+<br>
 
 MUSE
 
@@ -350,16 +364,16 @@ compare_two_long_strings($html, $expected, "right with align prop");
 sub compare_two_long_strings {
     my ($xhtml, $xexpected, $testname, $debug) = @_;
     my $got = html_to_muse($xhtml, $debug);
-    ok ($got eq $expected, $testname) or show_diff($got, $expected);
+    ok ($got eq $xexpected, $testname) or show_diff($got, $xexpected);
     my $tmpfh = File::Temp->new(TEMPLATE => "XXXXXXXXXX",
                                 TMPDIR => 1,
                                 SUFFIX => '.muse');
     my $fname = $tmpfh->filename;
     open (my $fh, '>:encoding(utf-8)', $fname) or die $!;
-    print $fh $xhtml;
+    print $fh q{<!doctype html><html><head><meta charset="utf-8"/></head><body>} . $xhtml . q{</body></html>};
     close $fh;
     $got = html_file_to_muse($fname);
-    ok($got eq $expected, $testname . ' (file)') or show_diff($got, $expected);
+    ok($got eq $xexpected, $testname . ' (file)') or show_diff($got, $xexpected);
 }
 
 
