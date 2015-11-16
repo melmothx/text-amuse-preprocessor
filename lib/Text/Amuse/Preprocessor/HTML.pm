@@ -35,6 +35,7 @@ needed if there are tables or complicated structures.
 
 =cut
 
+use IO::HTML qw/html_file/;
 use HTML::PullParser;
 
 my %microshitreplace = (
@@ -152,11 +153,9 @@ sub html_to_muse {
 }
 
 sub html_file_to_muse {
-  my ($text, $encoding) = @_;
-  $encoding ||= 'utf8';
+  my ($text) = @_;
   die "$text is not a file" unless (-f $text);
-  open (my $fh, "<:encoding($encoding)", $text) or die $!;
-  return _html_to_muse($fh);
+  return _html_to_muse(html_file($text));
 }
 
 sub _html_to_muse {
