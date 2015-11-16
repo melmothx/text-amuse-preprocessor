@@ -7,7 +7,17 @@ use warnings;
 use utf8;
 use File::Temp;
 use Data::Dumper;
-binmode STDOUT, ":encoding(utf-8)";
+eval "use Text::Diff;";
+my $use_diff;
+if (!$@) {
+    $use_diff = 1;
+}
+
+my $builder = Test::More->builder;
+binmode $builder->output,         ":utf8";
+binmode $builder->failure_output, ":utf8";
+binmode $builder->todo_output,    ":utf8";
+
 
 #########################
 
@@ -338,22 +348,18 @@ compare_two_long_strings($html, $expected, "right with align prop");
 
 
 sub compare_two_long_strings {
-  my ($xhtml, $xexpected, $testname, $debug) = @_;
-  my @array_got = split /(\n)/,
-    html_to_muse($xhtml, $debug);
-  my @array_exp = split /(\n)/, $xexpected;
-  is_deeply(\@array_got, \@array_exp, $testname);
-  my $tmpfh = File::Temp->new(TEMPLATE => "XXXXXXXXXX",
-                              TMPDIR => 1,
-                              SUFFIX => '.muse');
-  my $fname = $tmpfh->filename;
-  open (my $fh, '>:encoding(utf-8)', $fname) or die $!;
-
-  # convert xhtml stripping spaces to mimic the same behaviour
-  print $fh cleanup($xhtml);
-  close $fh;
-  @array_got = split /(\n)/, html_file_to_muse($fname);
-  is_deeply(\@array_got, \@array_exp, $testname);
+    my ($xhtml, $xexpected, $testname, $debug) = @_;
+    my $got = html_to_muse($xhtml, $debug);
+    ok ($got eq $expected, $testname) or show_diff($got, $expected);
+    my $tmpfh = File::Temp->new(TEMPLATE => "XXXXXXXXXX",
+                                TMPDIR => 1,
+                                SUFFIX => '.muse');
+    my $fname = $tmpfh->filename;
+    open (my $fh, '>:encoding(utf-8)', $fname) or die $!;
+    print $fh $xhtml;
+    close $fh;
+    $got = html_file_to_muse($fname);
+    ok($got eq $expected, $testname . ' (file)') or show_diff($got, $expected);
 }
 
 
@@ -366,26 +372,12 @@ sub showlines {
   }
 }
 
-sub cleanup {
-  my $rawtext = shift;
-  # preliminary cleaning
-  $rawtext =~ s!\t! !gs; # tabs are evil
-  $rawtext =~ s!\r! !gs; # \r is evil
-  $rawtext =~ s!\n! !gs;
-
-  # pack the things like hello<em> there</em> with space. Be careful
-  # with recursions.
-  my $recursion = 0;
-  while (($rawtext =~ m!( </|<[^/]+?> )!) && ($recursion < 20)) {
-    $rawtext =~ s!( +)(</.*?>)!$2$1!g;
-    $rawtext =~ s!(<[^/]*?>)( +)!$2$1!g;
-    $recursion++;
-  }
-  undef $recursion;
-  $rawtext =~ s/ +$//gm;
-  $rawtext =~ s/^ +//gm;
-  $rawtext =~ s!  +! !g;
-  # clear text around <br> 
-  $rawtext =~ s! *<br ?/?> *!<br />!g;
-  return $rawtext;
+sub show_diff {
+    my ($got, $exp) = @_;
+    if ($use_diff) {
+        diag diff(\$exp, \$got, { STYLE => 'Unified' });
+    }
+    else {
+        diag "GOT:\n$got\n\nEXP:\n$exp\n\n";
+    }
 }
