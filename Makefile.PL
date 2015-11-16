@@ -21,11 +21,13 @@ WriteMakefile(
         'IO::HTML' => 1,
         'HTML::PullParser' => 0,
         'Text::Amuse' => '0.15',
+        'Pod::Simple::Wiki' => '0.19',
     },
     EXE_FILES => [
         'bin/muse-rearrange-footnotes.pl',
         'bin/muse-check-footnotes.pl',
         'bin/html-to-muse.pl',
+        'bin/pod-to-muse.pl',
         'bin/muse-preprocessor.pl',
        ],
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

@@ -2,6 +2,7 @@ bin/html-to-muse.pl
 bin/muse-check-footnotes.pl
 bin/muse-preprocessor.pl
 bin/muse-rearrange-footnotes.pl
+bin/pod-to-muse.pl
 Changes
 lib/Text/Amuse/Preprocessor.pm
 lib/Text/Amuse/Preprocessor/Footnotes.pm

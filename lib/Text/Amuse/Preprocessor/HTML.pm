@@ -17,6 +17,8 @@ our @EXPORT_OK = qw( html_to_muse html_file_to_muse );
 
 our $VERSION = '0.05';
 
+=encoding utf8
+
 =head1 NAME
 
 Text::Amuse::Preprocessor::HTML - HTML importer
@@ -29,8 +31,9 @@ needed if there are tables or complicated structures.
 
 =head1 SYNOPSIS
 
+  use utf8;
   use Text::Amuse::Preprocessor::HTML qw/html_to_muse/;
-  my $html = '<p>Your text here... &amp; &quot; &ograve;</p>'
+  my $html = '<p>Your text here... &amp; &quot; &ograve; àùć</p>'
   my $muse = html_to_muse($html);
 
 =cut
