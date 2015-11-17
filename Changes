@@ -1,5 +1,11 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.25 2015-11-17
+
+ - Added script muse-preprocessor.pl for CLI usage
+ - Added pod-to-muse.pl script, using Pod::Simple::Wiki
+ - Cleaned up and enhanced HTML converter
+
 0.24 2015-03-21
  - Remove the invisible soft hyphen on the common filters
 
