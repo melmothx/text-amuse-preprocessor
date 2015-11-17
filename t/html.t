@@ -13,25 +13,15 @@ if (!$@) {
     $use_diff = 1;
 }
 
+use Test::More tests => 30;
 my $builder = Test::More->builder;
 binmode $builder->output,         ":utf8";
 binmode $builder->failure_output, ":utf8";
 binmode $builder->todo_output,    ":utf8";
 
-
-#########################
-
-# change 'tests => 1' to 'tests => last_test_to_print';
-
-use Test::More tests => 29;
-BEGIN { use_ok('Text::Amuse::Preprocessor::HTML') };
-
-#########################
-
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
-
 use Text::Amuse::Preprocessor::HTML qw/html_to_muse html_file_to_muse/;
+
+
 
 my $html = '<p>
 	Your text here... &amp; &quot; &ograve;</p>
@@ -46,6 +36,8 @@ is(html_to_muse('<pre>hello</pre>'), "\n<example>\nhello\n</example>\n");
 
 is(html_to_muse("<pre>hello\nworld\n\nhello</pre>"), "\n<example>\nhello\nworld\n\nhello\n</example>\n");
 
+is(html_to_muse("<i>hello there</i>"), "<em>hello there</em>", "Basic test works");
+is(html_to_muse("<b>hello there</b>"), "<strong>hello there</strong>", "Basic test works");
 
 $html = "
 <p>
