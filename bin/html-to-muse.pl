@@ -13,7 +13,7 @@ binmode STDERR, ":encoding(utf-8)";
 
 =head1 NAME
 
-html-to-muse.pl
+html-to-muse.pl - convert HTML files to muse files
 
 =head1 SYNOPSIS
 
@@ -21,7 +21,7 @@ html-to-muse.pl
 
 or
 
-  html-to-muse.pl http://example.com/my-file.html
+  html-to-muse.pl [options...] http://example.com/my-file.html
 
 =head2 Options
 
