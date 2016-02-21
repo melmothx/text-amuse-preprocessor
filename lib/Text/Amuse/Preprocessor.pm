@@ -50,8 +50,6 @@ mandatory), the only things the module does is to remove carriage
 returns, replace character ligatures or characters which shouldn't
 enter at all and expand the tabs to 4 spaces (no smart expanding).
 
-The source is pretty much commented.
-
 =head1 LANGUAGE SUPPORT
 
 The following languages are supported
@@ -512,6 +510,24 @@ The original documentation for the Emacs Muse markup can be found at:
 L<http://mwolson.org/static/doc/muse/Markup-Rules.html>
 
 The parser itself is L<Text::Amuse>.
+
+This distribution ships the following executables
+
+=over 4
+
+=item * html-to-muse.pl (HTML to muse converter)
+
+=item * muse-check-footnotes.pl (footnote checker)
+
+=item * muse-rearrange-footnotes.pl (fix footnote numbering)
+
+=item * pod-to-muse.pl (POD to muse converter)
+
+=item * muse-preprocessor.pl (script which uses this module)
+
+=back
+
+See the manpage or pass --help to the scripts for usage.
 
 =head1 LICENSE
 
