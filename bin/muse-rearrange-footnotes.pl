@@ -8,7 +8,7 @@ use File::Copy qw/move/;
 
 =head1 NAME
 
-muse-rearrange-footnotes.pl
+muse-rearrange-footnotes.pl - fix the footnote numbering in a muse document
 
 =head1 DESCRIPTION
 
@@ -45,7 +45,10 @@ The original file is overwritten if the option --overwrite is provided.
 
 =head1 SYNOPSIS
 
-  muse-rearrange-footnotes.pl file.muse
+  muse-rearrange-footnotes.pl [ --overwrite ] file.muse
+
+If the flag overwrite is not passed, the output will be left in
+file.muse.fixed, otherwise the file is modified in place.
 
 =head1 SEE ALSO
 
@@ -53,11 +56,15 @@ L<Text::Amuse::Preprocessor::Footnotes>
 
 =cut
 
-my $overwrite;
+my ($overwrite, $help);
 
-GetOptions(overwrite => \$overwrite) or die;
+GetOptions(overwrite => \$overwrite,
+           help => \$help) or die;
 
-die pod2usage("Please one or more muse file as arguments\n") unless @ARGV;
+if ($help || !@ARGV) {
+    pod2usage("\n");
+    exit;
+}
 
 foreach my $file (@ARGV) {
     my $output = $file . ".fixed";
