@@ -1,0 +1,32 @@
+Source: libtext-amuse-preprocessor-perl
+Section: perl
+Priority: optional
+Maintainer: packager <melmothx@gmail.com>
+Build-Depends: debhelper (>= 9)
+Build-Depends-Indep: libhtml-parser-perl,
+ libio-html-perl (>= 1),
+ libpod-simple-wiki-perl (>= 0.19),
+ libtext-amuse-perl (>= 0.15),
+ perl
+Standards-Version: 3.9.6
+Homepage: https://metacpan.org/release/Text-Amuse-Preprocessor
+
+Package: libtext-amuse-preprocessor-perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends},
+ libhtml-parser-perl,
+ libio-html-perl (>= 1),
+ libpod-simple-wiki-perl (>= 0.19),
+ libtext-amuse-perl (>= 0.15)
+Description: Helpers for Text::Amuse document formatting.
+ Text::Amuse::Preprocessor provides a solution to apply some common fixes to
+ muse files.
+ .
+ Without any option save for input and output (which are mandatory), the only
+ things the module does is to remove carriage returns, replace character
+ ligatures or characters which shouldn't enter at all and expand the tabs to 4
+ spaces (no smart expanding).
+ .
+ The source is pretty much commented.
+ .
+ This description was automagically extracted from the module by dh-make-perl.

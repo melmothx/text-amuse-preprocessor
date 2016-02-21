@@ -17,3 +17,5 @@ pod2htm*.tmp
 pm_to_blib
 Text-Amuse-Preprocessor-*
 Text-Amuse-Preprocessor-*.tar.gz
+debian/files
+debian/libtext-amuse-preprocessor-perl*
