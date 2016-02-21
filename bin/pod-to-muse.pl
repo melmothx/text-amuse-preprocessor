@@ -4,6 +4,45 @@ use strict;
 use warnings;
 use File::Basename;
 use Pod::Simple::Wiki;
+use Pod::Usage;
+use Getopt::Long;
+
+=head1 NAME
+
+pod-to-muse.pl - convert POD documentation to muse
+
+=head1 DESCRIPTION
+
+Convert the POD found in a module, script or pod file to muse, using
+L<Pod::Simple::Wiki>.
+
+=head1 SYNOPSIS
+
+ pod-to-muse.pl /path/to/lib/Module.pm [ output.muse ]
+
+or
+
+ cat /path/to/lib/Module.pm | pod-to-muse.pl > out.muse
+
+If an argument is provided, parse that file, otherwise use the STDIN.
+
+If a second argument is provided, use that as output, otherwise use
+the STDOUT.
+
+=head1 SEE ALSO
+
+L<Text::Amuse::Preprocessor>
+
+=cut
+
+my ($help);
+
+GetOptions(help => \$help) or die;
+
+if ($help) {
+    pod2usage();
+    exit;
+}
 
 my $parser = Pod::Simple::Wiki->new('muse');
 

@@ -54,6 +54,8 @@ file.muse.fixed, otherwise the file is modified in place.
 
 L<Text::Amuse::Preprocessor::Footnotes>
 
+L<Text::Amuse::Preprocessor>
+
 =cut
 
 my ($overwrite, $help);
