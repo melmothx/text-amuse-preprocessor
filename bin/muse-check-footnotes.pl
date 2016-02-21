@@ -6,20 +6,37 @@ use utf8;
 use Text::Amuse::Preprocessor::Footnotes;
 use Data::Dumper;
 use Getopt::Long;
+use Pod::Usage;
 
-my $verbose;
+=head1 NAME
 
-GetOptions("v|verbose" => \$verbose) or die;
+=head1 SYNOPSIS
+
+ muse-check-footnotes.pl file1.muse [ file2.muse, ... ]
+
+Check if the footnote parsing raises errors. No output if everything
+is fine, otherwise print a short report.
+
+=head1 SEE ALSO
+
+L<Text::Amuse::Preprocessor>
+
+=cut
+
+my ($verbose, $help);
+
+GetOptions("v|verbose" => \$verbose, # no op
+           "h|help" => \$help) or die;
+
+if ($help || !@ARGV) {
+    pod2usage("\n");
+    exit;
+}
 
 foreach my $file (@ARGV) {
     my $pp = Text::Amuse::Preprocessor::Footnotes->new(input => $file);
     $pp->process;
     if (my $error = $pp->error) {
-        if ($verbose) {
-            print "$file: " . Dumper($error);
-        }
-        else {
-            print "$file: found: $error->{footnotes} references: $error->{references}\n";
-        }
+        print "$file: found: $error->{footnotes_found} ($error->{footnotes}) references: $error->{references_found} ($error->{references})\n";
     }
 }
