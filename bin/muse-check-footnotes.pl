@@ -10,6 +10,8 @@ use Pod::Usage;
 
 =head1 NAME
 
+muse-check-footnotes.pl - check consistency of footnotes in a muse document
+
 =head1 SYNOPSIS
 
  muse-check-footnotes.pl file1.muse [ file2.muse, ... ]
