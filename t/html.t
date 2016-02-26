@@ -13,7 +13,7 @@ if (!$@) {
     $use_diff = 1;
 }
 
-use Test::More tests => 30;
+use Test::More tests => 32;
 my $builder = Test::More->builder;
 binmode $builder->output,         ":utf8";
 binmode $builder->failure_output, ":utf8";
@@ -105,8 +105,7 @@ my $expected = '
 
 <br>
 
-* This is
-a test
+* This is a test
 
 <br>
 
@@ -345,6 +344,40 @@ MUSE
 
 compare_two_long_strings($html, $expected, "right with align prop");
 
+$html = q{<p class=MsoNormal style='text-align:justify'><span lang=ES-MX
+style='font-size:11.0pt;font-family:Arial;color:black;mso-ansi-language:ES-MX'>Al
+fin podemos presentar a nuestros lectores esta cuarta edición cibernética del
+libro que con base en mucho trabajo, dedicación y cariño publicamos en nuestra
+editorial, </span><span lang=ES-MX style='font-size:11.0pt;font-family:Arial;
+mso-ansi-language:ES-MX'>Ediciones Antorcha<span style='color:black'>, el 25 de
+junio de 1980.</span></span></p><pre>
+
+this
+
+code
+
+is
+   looking ok
+
+</pre>};
+
+$expected = q{
+
+Al fin podemos presentar a nuestros lectores esta cuarta edición cibernética del libro que con base en mucho trabajo, dedicación y cariño publicamos en nuestra editorial, Ediciones Antorcha, el 25 de junio de 1980.
+
+<example>
+
+this
+
+code
+
+is
+   looking ok
+
+</example>
+};
+
+compare_two_long_strings($html, $expected, "ms-word garbage ok");
 
 # print html_to_muse($html);
 

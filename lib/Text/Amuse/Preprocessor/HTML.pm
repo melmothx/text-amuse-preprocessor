@@ -230,6 +230,10 @@ sub _html_to_muse {
         }
       }
       $line =~ s/\x{a0}/ /gs;
+      if ($current ne 'pre') {
+        $line =~ s/\b\s+\b/ /gs;
+      }
+      # remove leading spaces from these tags
       if ($current =~ m/^(h[1-6]|li|ul|ol|p|div)$/) {
         $line =~ s/^\s+//gms;
       }
