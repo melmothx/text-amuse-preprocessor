@@ -13,7 +13,7 @@ if (!$@) {
     $use_diff = 1;
 }
 
-use Test::More tests => 36;
+use Test::More tests => 48;
 my $builder = Test::More->builder;
 binmode $builder->output,         ":utf8";
 binmode $builder->failure_output, ":utf8";
@@ -37,7 +37,47 @@ is(html_to_muse('<pre>hello</pre>'), "\n<example>\nhello\n</example>\n");
 is(html_to_muse("<pre>hello\nworld\n\nhello</pre>"), "\n<example>\nhello\nworld\n\nhello\n</example>\n");
 
 is(html_to_muse("<i>hello there</i>"), "<em>hello there</em>", "Basic test works");
+is(html_to_muse("<i>hello there</i>\n<em>hi</em>\n"), "<em>hello there</em> <em>hi</em>\n" , "Basic test works");
 is(html_to_muse("<b>hello there</b>"), "<strong>hello there</strong>", "Basic test works");
+
+foreach my $em (qw/em i u/) {
+    is (html_to_muse("<p><$em>em</$em>\ni <$em>em</$em>\n\n</p><p>blabla</p>"),
+        "\n\n<em>em</em> i <em>em</em>\n\nblabla\n\n", "$em => em");
+}
+
+foreach my $em (qw/strong b/) {
+    is (html_to_muse("<p><$em>em</$em>\ni <$em>em</$em>\n\n</p><p>blabla</p>"),
+        "\n\n<strong>em</strong> i <strong>em</strong>\n\nblabla\n\n", "$em => strong");
+}
+
+my %checks = (
+              code => 'code',
+              sup => 'sup',
+              sub => 'sub',
+              strike => 'del',
+              del => 'del',
+             );
+foreach my $em (keys %checks) {
+    is (html_to_muse("<p><$em>em</$em>\ni <$em>em</$em>\n\n</p><p>blabla</p>"),
+        "\n\n<$checks{$em}>em</$checks{$em}> i <$checks{$em}>em</$checks{$em}>\n\nblabla\n\n", "$em => $checks{$em} ok");
+}
+
+$html = q{
+<p>
+My
+<em>
+test
+</em>
+
+<a href=""></a>
+
+<a href="test">Me</a>
+
+Hullo there
+</p>
+};
+is html_to_muse($html), "\n\nMy <em>test</em> [[test][Me]] Hullo there\n\n";
+
 
 $html = "
 <p>

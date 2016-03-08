@@ -42,19 +42,19 @@ use IO::HTML qw/html_file/;
 use HTML::PullParser;
 
 my %preserved = (
-		 "em" => ["<em>", "</em>"],
-		 "i"  => ["<em>", "</em>"],
-		 "u"  => ["<em>", "</em>"],
-		 "strong" => ["<strong>", "</strong>"],
-		 "b"      => ["<strong>", "</strong>"],
+		 "em" => [["<em>"], ["</em>"]],
+		 "i"  => [["<em>"], ["</em>"]],
+		 "u"  => [["<em>"], ["</em>"]],
+		 "strong" => [["<strong>"], ["</strong>"]],
+		 "b"      => [["<strong>"], ["</strong>"]],
 		 "blockquote" => ["\n<quote>\n", "\n</quote>"],
 		 "ol" => ["\n\n", "\n\n"],
 		 "ul" => ["\n\n", "\n\n"],
 		 "li" => { ol => [ " 1. ", "\n\n"],
 			   ul => [ " - ", "\n\n"],
 			 },
-		 "code" => ["<code>", "</code>"],
-		 "a" => ["[[", "]]"],
+		 "code" => [["<code>"], ["</code>"]],
+		 "a" => [[ "[[" ] , [ "]]" ]],
 		 "pre" => [ "\n<example>\n", "\n</example>\n" ],
 		 "tr" => ["\n", "\n"],
 		 "td" => [" | ", " " ],
@@ -67,10 +67,10 @@ my %preserved = (
 		 "h4" => ["\n*** ", "\n\n"],
 		 "h5" => ["\n**** ", "\n\n"],
 		 "h6" => ["\n***** ", "\n\n"],
-		 "sup" => ["<sup>", "</sup>" ],
-		 "sub" => ["<sub>", "</sub>" ],
-		 "strike" => ["<del>", "</del>"],
-		 "del" => ["<del>", "</del>"],
+		 "sup" => [["<sup>"], ["</sup>"]],
+		 "sub" => [["<sub>"], ["</sub>"]],
+		 "strike" => [["<del>"], ["</del>"]],
+		 "del" => [["<del>"], ["</del>"]],
 		 "p" => ["\n\n", "\n\n"],
 		 "br" => ["\n\n", "\n\n"], # if you're asking why, a
                                            # lot of pages use the br
@@ -179,7 +179,7 @@ sub _html_to_muse {
       if ((defined $tag) &&
 	  ($tag eq 'a') &&
 	  (my $href =  $attr->{href})) {
-	push @textstack, $href, "][";
+	push @textstack, [ $href, "][" ];
       }
     }
 
@@ -230,19 +230,34 @@ sub _html_to_muse {
         }
       }
       $line =~ s/\x{a0}/ /gs;
-      if ($current ne 'pre') {
-        $line =~ s/(?<=\S)\s+(?=\S)/ /gs;
-      }
       # remove leading spaces from these tags
       if ($current =~ m/^(h[1-6]|li|ul|ol|p|div)$/) {
         $line =~ s/^\s+//gms;
       }
-      push @textstack, $line;
+      if ($current ne 'pre') {
+        push @textstack, [ $line ];
+      }
+      else {
+        push @textstack, $line;
+      }
     } else {
       warn "which type? $type??\n"
     }
   }
-  my $parsed = join("", @textstack);
+  my @current_text;
+  my @processed;
+  while (@textstack) {
+    my $text = shift(@textstack);
+    if (ref($text)) {
+      push @current_text, @$text;
+    }
+    else {
+      push @processed, _merge_text_lines(\@current_text);
+      push @processed, $text;
+    }
+  }
+  push @processed, _merge_text_lines(\@current_text);
+  my $parsed = join("", @processed);
   # clean the footnotes.
   $parsed =~ s!\[
 	       \[
@@ -268,11 +283,11 @@ sub _html_to_muse {
     $parsed =~ s!(<[^/]*?>)( +)!$2$1!g;
     $recursion++;
   }
+  # empty links artefacts.
+  $parsed =~ s/\[\[\]\]//g;
   $parsed =~ s/(?<=\S) +(?=\S)/ /g;
   $parsed =~ s/ +$//gms;
   $parsed =~ s/\n\n\n+/\n\n/gs;
-  # empty links artefacts.
-  $parsed =~ s/\[\[\]\]//g;
   return $parsed;
 }
 
@@ -312,6 +327,15 @@ sub _pars_process_attr {
     }
   }
   return $tag;
+}
+
+sub _merge_text_lines {
+  my $lines = shift;
+  return '' unless @$lines;
+  my $text = join ('', @$lines);
+  $text =~ s/(?<=\S)\s+(?=\S)/ /gs;
+  @$lines = ();
+  return $text;
 }
 
 1;
