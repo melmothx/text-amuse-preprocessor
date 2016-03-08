@@ -392,7 +392,9 @@ que perjudicar a una y a otra.&quot;</span></p>
 };
 
 $expected = q{
+
 "Libertad ilimitada de propaganda, de opinión, de prensa, de reunión pública o privada...Libertad absoluta para organizar asociaciones, aunque sean con manifiestos fines inmorales...La libertad puede y debe defenderse únicamente mediante la libertad: proponer su restricción con el pretexto de que se la defiende es una peligrosa ilusión. Como la moral no tiene otra fuente, ni otro objeto, ni otro estimulante que la libertad, todas las restricciones a ésta, con el propósito de defender a aquélla, no han hecho más que perjudicar a una y a otra."
+
 };
 
 compare_two_long_strings($html, $expected, "ms-word garbage ok");
@@ -425,7 +427,9 @@ actual. </span></p>
 };
 
 $expected = q{
+
 Pero, no interesa demasiado en este momento abundar en el asunto[1] y -a efectos de ahorrarnos la exposición detenida de reflexiones varias sobre el punto- bien podemos nosotros ahora plegarnos a pies juntillas a buena parte de las posiciones sostenidas por la izquierda uruguaya en torno al tema. Por lo pronto, nos resulta enteramente condenable y digna del mayor de los desprecios esa conducta propia de los anélidos que consiste en barrer la tierra con el pecho y transformarse en el oscuro y genuflexo brazo ejecutor de los antojos destemplados, las arbitrariedades sin cuento y los desplantes inmisericordes del más poderoso de los Estados contemporáneos. Estamos dispuestos, por lo tanto, a sostener en forma convencida y convincente que el gobierno uruguayo fue estimulado por los Estados Unidos -vaya uno a saber cómo y exactamente a cambio de qué-[2] para adoptar la conducta diplomática que finalmente adoptó: proponer, en la Comisión de Derechos Humanos de las Naciones Unidas, la realización de una visita inspectiva del organismo a efectos de registrar la situación por la que atraviesa tal problemática en la Cuba actual.
+
 };
 
 compare_two_long_strings($html, $expected, "ms-word garbage ok");

@@ -231,7 +231,7 @@ sub _html_to_muse {
       }
       $line =~ s/\x{a0}/ /gs;
       if ($current ne 'pre') {
-        $line =~ s/\b\s+\b/ /gs;
+        $line =~ s/(?<=\S)\s+(?=\S)/ /gs;
       }
       # remove leading spaces from these tags
       if ($current =~ m/^(h[1-6]|li|ul|ol|p|div)$/) {
@@ -271,6 +271,8 @@ sub _html_to_muse {
   $parsed =~ s/(?<=\S) +(?=\S)/ /g;
   $parsed =~ s/ +$//gms;
   $parsed =~ s/\n\n\n+/\n\n/gs;
+  # empty links artefacts.
+  $parsed =~ s/\[\[\]\]//g;
   return $parsed;
 }
 
