@@ -7,6 +7,8 @@ use Text::Amuse::Preprocessor::HTML qw/html_file_to_muse html_to_muse/;
 use LWP::UserAgent;
 use Getopt::Long;
 use Encode qw/decode_utf8/;
+use File::Temp;
+use File::Spec;
 use utf8;
 binmode STDOUT, ":encoding(utf-8)";
 binmode STDERR, ":encoding(utf-8)";
@@ -27,10 +29,6 @@ or
 
 =over 4
 
-=item --encoding <encoding-name>
-
-Default to utf-8. The switch is used only on local files.
-
 =item --lang
 
 Set the language of the document in the muse output
@@ -38,6 +36,11 @@ Set the language of the document in the muse output
 =item --title
 
 Set the title of the document (otherwise the filename is used).
+
+=item --no-header
+
+Do not add #title and #lang (handy if you are processing files in a
+loop and merge them together.
 
 =back
 
@@ -54,14 +57,14 @@ L<Text::Amuse::Preprocessor>
 =cut
 
 
-my $encoding = 'utf-8';
-my $help;
+my ($help, $no_header);
 my $lang = 'en';
 my $title = '';
 
-GetOptions ("encoding=s" => \$encoding,
+GetOptions (
             "lang=s" => \$lang,
             "title=s" => \$title,
+            "no-header" => \$no_header,
             help => \$help) or die;
 
 if ($help || !@ARGV) {
@@ -70,28 +73,31 @@ if ($help || !@ARGV) {
 }
 
 foreach my $f (@ARGV) {
-    if ($title) {
-        $title = decode_utf8($title);
+    unless ($no_header) {
+        if ($title) {
+            $title = decode_utf8($title);
+        }
+        else {
+            $title = $f;
+        }
+        print "#title $title\n";
+        print "#lang $lang\n\n";
     }
-    else {
-        $title = $f;
-    }
-    print "#title $title\n";
-    print "#lang $lang\n\n";
     process_target($f);
 }
 
 sub process_target {
     my $f = shift;
     if (-f $f) {
-        print html_file_to_muse($f, $encoding);
+        print html_file_to_muse($f);
     }
     else {
+        my $fh = File::Temp->newdir;
+        my $target = File::Spec->catfile($fh, 'target.hml');
         my $ua = LWP::UserAgent->new;
-        my $res = $ua->get($f);
+        my $res = $ua->mirror($f, $target);
         if ($res->is_success) {
-            my $body = $res->decoded_content;
-            print html_to_muse($body);
+            print html_file_to_muse($target);
         }
         else {
             warn $res->status_line . "\n";
