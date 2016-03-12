@@ -13,7 +13,7 @@ if (!$@) {
     $use_diff = 1;
 }
 
-use Test::More tests => 48;
+use Test::More tests => 52;
 my $builder = Test::More->builder;
 binmode $builder->output,         ":utf8";
 binmode $builder->failure_output, ":utf8";
@@ -37,7 +37,7 @@ is(html_to_muse('<pre>hello</pre>'), "\n<example>\nhello\n</example>\n");
 is(html_to_muse("<pre>hello\nworld\n\nhello</pre>"), "\n<example>\nhello\nworld\n\nhello\n</example>\n");
 
 is(html_to_muse("<i>hello there</i>"), "<em>hello there</em>", "Basic test works");
-is(html_to_muse("<i>hello there</i>\n<em>hi</em>\n"), "<em>hello there</em> <em>hi</em>\n" , "Basic test works");
+is(html_to_muse("<i>hello there</i>\n<em>hi</em>\n"), "<em>hello there</em> <em>hi</em>" , "Basic test works");
 is(html_to_muse("<b>hello there</b>"), "<strong>hello there</strong>", "Basic test works");
 
 foreach my $em (qw/em i u/) {
@@ -77,7 +77,6 @@ Hullo there
 </p>
 };
 is html_to_muse($html), "\n\nMy <em>test</em> [[test][Me]] Hullo there\n\n";
-
 
 $html = "
 <p>
@@ -214,7 +213,7 @@ $expected = "\n\nI'd been in town for about 24 hours when I got to the anarchist
 compare_two_long_strings($html, $expected, "links");
 
 compare_two_long_strings("<html> <head><title>hello</title></head><body> <em> <strong> Hello </strong></em> </body></html>",
-			 " hello <em><strong>Hello</strong></em>",
+			 "hello <em><strong>Hello</strong></em>",
 			 "testing simple random tags");
 
 
@@ -260,7 +259,7 @@ compare_two_long_strings("<sup>1</sup>", "<sup>1</sup>", "sup");
 
 compare_two_long_strings(
 			 "<div><i> <b> 1 </b> </i> <i> <b> 1 </b> </i></div>",
-			 "\n\n  <em><strong>1</strong></em>" . " " .
+			 "\n\n<em><strong>1</strong></em>" . " " .
 			 "<em><strong>1</strong></em>\n\n",
 			"i and b");
 
@@ -475,6 +474,89 @@ Pero, no interesa demasiado en este momento abundar en el asunto[1] y -a efectos
 compare_two_long_strings($html, $expected, "ms-word garbage ok");
 # print html_to_muse($html);
 
+
+$html = q{
+<table>
+
+<tr>
+<th> Header #1</th>
+
+<th> Header #2</th>
+
+</tr>
+
+<tr valign="top" class="li_2">
+
+
+<td><a href="/group/perl.cpan.testers.discuss/2016/03/msg3786.html">How to process a Build-Pre-req as a prereq and not a FAIL?</a></td>
+
+
+<td width="130">3 <span class="lighter">messages</span></td>
+
+<td width="250" class="small">
+
+
+Blablaa <em>
+bla
+</em>
+bla
+</td>
+<td width="120"> 5 Mar</td>
+<!-- <td width="80" class="dimmed small">tid 3786</td> -->
+</tr>
+<tr valign="top" class="li_1">
+<td><a href="/group/perl.cpan.testers.discuss/2016/03/msg3781.html">Re: Beware testing Perl6/ distributions ??? CPAN::Reporter::Smokerusers should upgrade</a></td>
+<td width="130">5 <span class="lighter">messages</span></td>
+<td width="250" class="small">
+Blablaa <strong>
+blaxXxX
+</strong>
+bla
+</td>
+<td width="120"> 2 Mar</td>
+<!-- <td width="80" class="dimmed small">tid 3781</td> -->
+</tr>
+</table>
+};
+
+$expected = q{
+
+ Header #1 || Header #2 ||
+ [[/group/perl.cpan.testers.discuss/2016/03/msg3786.html][How to process a Build-Pre-req as a prereq and not a FAIL?]] | 3 messages | Blablaa <em>bla</em> bla | 5 Mar |
+ [[/group/perl.cpan.testers.discuss/2016/03/msg3781.html][Re: Beware testing Perl6/ distributions ??? CPAN::Reporter::Smokerusers should upgrade]] | 5 messages | Blablaa <strong>blaxXxX</strong> bla | 2 Mar |
+
+};
+
+compare_two_long_strings($html, $expected, "table ok");
+
+$html =<<'HTML';
+<pre>
+
+
+
+if (my $help  = shift(@ARGV)) {
+
+
+
+    print "Can't  really  help  you...\n";
+
+
+}
+</pre>
+HTML
+$expected =<<'MUSE';
+
+<example>
+
+if (my $help  = shift(@ARGV)) {
+
+    print "Can't  really  help  you...\n";
+
+}
+
+</example>
+MUSE
+compare_two_long_strings($html, $expected, "verbatim ok");
 
 # showlines(html_to_muse($expected));
 

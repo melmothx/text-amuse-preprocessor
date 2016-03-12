@@ -56,9 +56,10 @@ my %preserved = (
 		 "code" => [["<code>"], ["</code>"]],
 		 "a" => [[ "[[" ] , [ "]]" ]],
 		 "pre" => [ "\n<example>\n", "\n</example>\n" ],
-		 "tr" => ["\n", "\n"],
-		 "td" => [" | ", " " ],
-		 "th" => [ " || ", " " ],
+		 table => ["\n\n", "\n\n"],
+		 "tr" => ["\n ", "" ],
+		 "td" => [[" "], [" | "] ],
+		 "th" => [[ " "], [" || "] ],
 		 "dd" => ["\n\n", "\n\n"],
 		 "dt" => ["\n***** ", "\n\n" ],
 		 "h1" => ["\n* ", "\n\n"],
@@ -257,7 +258,17 @@ sub _html_to_muse {
     }
   }
   push @processed, _merge_text_lines(\@current_text);
-  my $parsed = join("", @processed);
+  my $full = join("", @processed);
+  $full =~ s/\n\n\n+/\n\n/gs;
+  return $full;
+}
+
+sub _cleanup_text_block {
+  my $parsed = shift;
+  return '' unless defined $parsed;
+  # here we are inside a single text block.
+  $parsed =~ s/\s+/ /gs;
+  # print "<<<$parsed>>>\n";
   # clean the footnotes.
   $parsed =~ s!\[
 	       \[
@@ -285,9 +296,10 @@ sub _html_to_muse {
   }
   # empty links artefacts.
   $parsed =~ s/\[\[\]\]//g;
-  $parsed =~ s/(?<=\S) +(?=\S)/ /g;
-  $parsed =~ s/ +$//gms;
-  $parsed =~ s/\n\n\n+/\n\n/gs;
+  $parsed =~ s/\s+/ /gs;
+  $parsed =~ s/\A\s+//;
+  $parsed =~ s/\s+\z//;
+  # print ">>>$parsed<<<\n";
   return $parsed;
 }
 
@@ -333,9 +345,8 @@ sub _merge_text_lines {
   my $lines = shift;
   return '' unless @$lines;
   my $text = join ('', @$lines);
-  $text =~ s/(?<=\S)\s+(?=\S)/ /gs;
   @$lines = ();
-  return $text;
+  return _cleanup_text_block($text);
 }
 
 1;
