@@ -1,5 +1,10 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.29 2016-04-16
+
+ - Fixed typographical filter to avoid opening quotes at the end of
+   line with lonely characters.
+
 0.28 2016-04-16
 
  - Added support for french

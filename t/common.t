@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 39;
+use Test::More tests => 41;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -146,6 +146,35 @@ is_deeply ($bpp->error, {
                          footnotes_found => '[1] [1] [1]',
                          references_found => '[1]',
                         });
+
+{
+    my $quotes =<<'MUSE';
+#lang fr
+
+' Begin, End '           
+
+" Begin, End "              
+
+' Begin, End '
+
+" Begin, End "
+
+MUSE
+    my $expected_muse =<<'MUSE';
+#lang fr
+
+‘ Begin, End ’
+
+«  Begin, End  »
+
+‘ Begin, End ’
+
+«  Begin, End  »
+
+MUSE
+    test_strings("Quote", $quotes, $expected_muse, 1, 1, 1, 1);
+}
+
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $nbsp, $fn) = @_;

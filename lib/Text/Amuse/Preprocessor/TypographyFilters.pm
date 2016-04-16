@@ -271,13 +271,17 @@ sub filter {
         $l =~ s/(?<=\W)"(?=\w)/$ldouble/g;
         $l =~ s/(?<=\W)'(?=\w)/$lsingle/g;
 
-        # if there is a space at the left, it's opening
-        $l =~ s/(?<=\s)"/$ldouble/g;
-        $l =~ s/(?<=\s)'/$lsingle/g;
-
         # beginning of line, opening
         $l =~ s/^"/$ldouble/;
         $l =~ s/^'/$lsingle/;
+
+        # end of line, closing
+        $l =~ s/" *$/$rdouble/;
+        $l =~ s/' *$/$rsingle/;
+
+        # if there is a space at the left, it's opening
+        $l =~ s/(?<=\s)"/$ldouble/g;
+        $l =~ s/(?<=\s)'/$lsingle/g;
 
         # print encode('UTF-8', "**** $l");
 
