@@ -75,6 +75,17 @@ sub characters {
                    endash => "-",
                    dash =>    "\x{2014}",
                   },
+            fr => {
+                   ldouble => "\x{ab} ",
+                   rdouble => " \x{bb}",
+                   lsingle => "\x{2018}",
+                   rsingle => "\x{2019}",
+                   apos =>    "\x{2019}",
+                   emdash =>  "\x{2014}",
+                   endash =>  "\x{2013}",
+                   dash =>    "\x{2014}",
+                  },
+
             # according to http://en.wikipedia.org/wiki/International_variation_in_quotation_marks#Finnish_and_Swedish
             sv => {
                    ldouble => "\x{201d}",

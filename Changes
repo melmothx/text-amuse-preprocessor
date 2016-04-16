@@ -1,5 +1,9 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.28 2016-04-16
+
+ - Added support for french
+
 0.27 2016-03-12
 
  - Improved the HTML with better handling of text blocks and tables.

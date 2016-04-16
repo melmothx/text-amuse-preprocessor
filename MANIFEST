@@ -37,6 +37,7 @@ t/testfiles/de.muse
 t/testfiles/en.muse
 t/testfiles/es.muse
 t/testfiles/fi.muse
+t/testfiles/fr.muse
 t/testfiles/full.in.muse
 t/testfiles/full.out.muse
 t/testfiles/hr.muse
