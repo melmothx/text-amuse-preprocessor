@@ -1,7 +1,6 @@
 # -*- mode: cperl -*-
 package Text::Amuse::Preprocessor::Typography;
 
-use 5.010001;
 use strict;
 use warnings;
 use utf8;
