@@ -83,7 +83,7 @@ my $preprocessor = Text::Amuse::Preprocessor->new(
                                                   output => $outfile,
                                                   fix_links => 1,
                                                   fix_typography  => 1,
-                                                  debug => 1,
+                                                  debug => 0,
                                                  );
 
 is $preprocessor->process, $outfile, "process return the outfile";

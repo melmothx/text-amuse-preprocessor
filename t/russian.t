@@ -80,7 +80,7 @@ my $out = '';
 
 my $pp = Text::Amuse::Preprocessor->new(input => \$in,
                                         output => \$out,
-                                        debug => 1,
+                                        debug => 0,
                                         remove_nbsp => 1,
                                         fix_nbsp => 1,
                                         fix_typography => 1);
@@ -92,7 +92,7 @@ my $stripped = '';
 
 $pp = Text::Amuse::Preprocessor->new(input => \$out,
                                      output => \$stripped,
-                                     debug => 1,
+                                     debug => 0,
                                      fix_nbsp => 0,
                                      remove_nbsp => 1,
                                      fix_typography => 0);

@@ -21,7 +21,7 @@ foreach my $good (qw/good good2 good-3/) {
     diag "Testing $input => $expected";
     $pp = Text::Amuse::Preprocessor::Footnotes->new(input => $input,
                                                     output => $out,
-                                                    debug  => 1,
+                                                    debug  => 0,
                                                   );
     ok ($pp->process, "success") or diag Dumper($pp->error);
     ok (!$pp->error);
@@ -33,7 +33,7 @@ my $too_many_refs = catfile(qw/t footnotes bad.muse/);
 
 $pp = Text::Amuse::Preprocessor::Footnotes->new(output => $out,
                                                 input => $too_many_refs,
-                                                debug  => 1,
+                                                debug  => 0,
                                                );
 ok (!$pp->process, "No success");
 ok (! -f $out, "$out not written");
@@ -48,7 +48,7 @@ my $too_many_fns = catfile(qw/t footnotes bad2.muse/);
 
 $pp = Text::Amuse::Preprocessor::Footnotes->new(output => $out,
                                                 input => $too_many_fns,
-                                                debug  => 1,
+                                                debug  => 0,
                                                );
 ok (!$pp->process, "No success");
 ok (! -f $out, "$out not written");
