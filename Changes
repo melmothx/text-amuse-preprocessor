@@ -1,5 +1,9 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.32 2016-06-18
+
+ - Cleaned tests (do not leave dirs behind)
+
 0.31 2016-06-15
 
  - Added --inplace option to muse-preprocessor
