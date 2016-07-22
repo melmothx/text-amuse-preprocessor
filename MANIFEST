@@ -46,6 +46,7 @@ t/testfiles/it.muse
 t/testfiles/mk.muse
 t/testfiles/pt.muse
 t/testfiles/ru.muse
+t/testfiles/sq.muse
 t/testfiles/sr.muse
 t/testfiles/sv.muse
 t/typography.t
