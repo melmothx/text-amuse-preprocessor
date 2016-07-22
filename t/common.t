@@ -8,6 +8,12 @@ use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
 
+eval "use Text::Diff;";
+my $use_diff;
+if (!$@) {
+    $use_diff = 1;
+}
+
 my $builder = Test::More->builder;
 binmode $builder->output,         ":encoding(UTF-8)";
 binmode $builder->failure_output, ":encoding(UTF-8)";
@@ -193,7 +199,7 @@ sub test_strings {
     $pp->process;
     is_deeply([ split /\n/, $output_string ],
               [ split /\n/, $expected ],
-              "$name with reference works");
+              "$name with reference works") or show_diff($output_string, $expected);
     
     # and the file variant
     my $dir = File::Temp->newdir(CLEANUP => 1);
@@ -212,9 +218,10 @@ sub test_strings {
                                                  debug => 0,
                                                 );
     $pp_file->process;
-    is_deeply([ split /\n/, read_file($outfile) ],
+    my $from_file = read_file($outfile);
+    is_deeply([ split /\n/, $from_file ],
               [ split /\n/, $expected ],
-              "$name with files works");
+              "$name with files works") or show_diff($from_file, $expected);
 }
 
 sub read_file {
@@ -225,3 +232,12 @@ sub write_file {
     return Text::Amuse::Preprocessor->_write_file(@_);
 }
 
+sub show_diff {
+    my ($got, $exp) = @_;
+    if ($use_diff) {
+        diag diff(\$exp, \$got, { STYLE => 'Unified' });
+    }
+    else {
+        diag "GOT:\n$got\n\nEXP:\n$exp\n\n";
+    }
+}

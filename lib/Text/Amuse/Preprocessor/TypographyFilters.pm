@@ -269,6 +269,9 @@ sub filter {
         # between spaces, just replace
         $l =~ s/(?<=\S)(\s+)-{1,3}(\s+)(?=\S)/$1$emdash$2/g;
 
+        # end of line with
+        $l =~ s/(?<=\S) +-{1,3}$/ $emdash/;
+
         # -word and word-, in the middle of a line
         $l =~ s/(?<=\S)(\s+)-(\w.+?\w)-(?=\s)/$1$emdash $2 $emdash/g;
 
