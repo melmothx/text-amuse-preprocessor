@@ -285,9 +285,9 @@ sub process {
     }
 
     my $outfile = $self->_outfile;
-    open (my $tmpfh, '<:encoding(utf-8)', $infile)
+    open (my $tmpfh, '<:encoding(UTF-8)', $infile)
       or die "Can't open $infile $!";
-    open (my $auxfh, '>:encoding(utf-8)', $outfile)
+    open (my $auxfh, '>:encoding(UTF-8)', $outfile)
       or die "Can't open $outfile $!";
 
     my $line;
