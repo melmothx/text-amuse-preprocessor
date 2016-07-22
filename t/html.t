@@ -15,10 +15,9 @@ if (!$@) {
 
 use Test::More tests => 52;
 my $builder = Test::More->builder;
-binmode $builder->output,         ":utf8";
-binmode $builder->failure_output, ":utf8";
-binmode $builder->todo_output,    ":utf8";
-
+binmode $builder->output,         ":encoding(UTF-8)";
+binmode $builder->failure_output, ":encoding(UTF-8)";
+binmode $builder->todo_output,    ":encoding(UTF-8)";
 use Text::Amuse::Preprocessor::HTML qw/html_to_muse html_file_to_muse/;
 
 
@@ -568,13 +567,15 @@ sub compare_two_long_strings {
     ok ($got eq $xexpected, $testname) or show_diff($got, $xexpected);
     my $tmpfh = File::Temp->new(TEMPLATE => "XXXXXXXXXX",
                                 TMPDIR => 1,
-                                SUFFIX => '.muse');
+                                UNLINK => 1,
+                                SUFFIX => '.html');
     my $fname = $tmpfh->filename;
-    open (my $fh, '>:encoding(utf-8)', $fname) or die $!;
-    print $fh q{<!doctype html><html><head><meta charset="utf-8"/></head><body>} . $xhtml . q{</body></html>};
+    diag "Using $fname\n";
+    open (my $fh, '>:encoding(UTF-8)', $fname) or die $!;
+    print $fh q{<!doctype html><html><head><meta charset="UTF-8"/></head><body>} . $xhtml . q{</body></html>};
     close $fh;
     $got = html_file_to_muse($fname);
-    ok($got eq $xexpected, $testname . ' (file)') or show_diff($got, $xexpected);
+    is ($got, $xexpected, $testname . ' (file)') or show_diff($got, $xexpected);
 }
 
 
@@ -582,7 +583,7 @@ sub showlines {
   my $expected = shift;
   my $count = 0;
   foreach my $l (split /(\n)/, $expected) {
-    print "[$count] " . $l . "\n";
+    diag "[$count] " . $l . "\n";
     $count++;
   }
 }
