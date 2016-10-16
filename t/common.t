@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 45;
+use Test::More tests => 49;
 use Text::Amuse::Preprocessor;
 use File::Temp;
 use File::Spec::Functions qw/catfile catdir/;
@@ -111,7 +111,7 @@ my $original_expected = $expected;
 
 test_strings(links => $input, $expected, 0, 1, 0);
 
-foreach my $lang (qw/en fi es sr hr ru it mk sv de fr pt sq/) {
+foreach my $lang (qw/en fi es sr hr ru it mk sv de fr pt sq da/) {
     test_lang($lang);
 }
 
@@ -181,6 +181,20 @@ MUSE
     test_strings("Quote", $quotes, $expected_muse, 1, 1, 1, 1);
 }
 
+{
+    my $da_in = <<'MUSE';
+#lang da
+
+"Outer quotation 'inner' hyphen-for-words - and a dash"
+MUSE
+
+    my $da_out = <<'MUSE';
+#lang da
+
+»Outer quotation ’inner’ hyphen-for-words – and a dash«
+MUSE
+    test_strings("Quote", $da_in, $da_out, 1, 1, 1, 1);
+}
 
 sub test_strings {
     my ($name, $input, $expected, $typo, $links, $nbsp, $fn) = @_;

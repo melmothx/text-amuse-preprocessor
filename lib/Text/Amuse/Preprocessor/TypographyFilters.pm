@@ -198,6 +198,18 @@ sub characters {
                    endash  => "\x{2013}",
                    dash    => "\x{2013}",
                   },
+            # »Outer quotation ’inner’ hyphen-for-words – and a dash«
+            # (en-dash between spaces is correct)
+            da => {
+                   ldouble => "\x{bb}",
+                   rdouble => "\x{ab}",
+                   lsingle => "\x{2019}",
+                   rsingle => "\x{2019}",
+                   apos    => "\x{2019}",
+                   emdash  => "\x{2013}",
+                   endash  => "\x{2013}",
+                   dash    => "\x{2013}",
+                  },
            };
 }
 
