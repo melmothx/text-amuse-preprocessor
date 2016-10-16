@@ -1,5 +1,9 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.34 2016-10-16
+
+ - Added support for danish
+
 0.33 2016-07-22
 
  - Added support for albanian
