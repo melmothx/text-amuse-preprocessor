@@ -18,11 +18,11 @@ Text::Amuse::Preprocessor - Helpers for Text::Amuse document formatting.
 
 =head1 VERSION
 
-Version 0.34
+Version 0.35
 
 =cut
 
-our $VERSION = '0.34';
+our $VERSION = '0.35';
 
 
 =head1 SYNOPSIS
@@ -291,8 +291,8 @@ sub process {
       or die "Can't open $outfile $!";
 
     my $line;
-    while (<$tmpfh>) {
-        $line = $_;
+    while (my $readline = <$tmpfh>) {
+        $line = $readline;
         #remove nulls
         $line =~ s/\0//g;
 

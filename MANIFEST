@@ -16,6 +16,7 @@ t/00-load.t
 t/changes.t
 t/chars.t
 t/common.t
+t/crash_on_loop.t
 t/footnotes.t
 t/footnotes/bad.muse
 t/footnotes/bad2.muse
