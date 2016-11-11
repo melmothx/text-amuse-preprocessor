@@ -18,7 +18,7 @@ WriteMakefile(
     PREREQ_PM => {
         'IO::HTML' => 1,
         'HTML::PullParser' => 0,
-        'Text::Amuse' => '0.15',
+        'Text::Amuse' => '0.76',
         'Pod::Simple::Wiki' => '0.19',
     },
     EXE_FILES => [

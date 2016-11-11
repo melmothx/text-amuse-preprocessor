@@ -1,5 +1,9 @@
 Revision history for perl module Text-Amuse-Preprocessor
 
+0.36 2016-11-11
+
+ - Bump up Text::Amuse prerequisite to avoid failing tests.
+
 0.35 2016-10-22
 
  - Removed use of $_ while reading files

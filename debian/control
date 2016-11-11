@@ -17,7 +17,7 @@ Depends: ${misc:Depends}, ${perl:Depends},
  libhtml-parser-perl,
  libio-html-perl (>= 1),
  libpod-simple-wiki-perl (>= 0.19),
- libtext-amuse-perl (>= 0.15)
+ libtext-amuse-perl (>= 0.76)
 Description: Helpers for Text::Amuse document formatting.
  This module ships with the following executables:
  .
