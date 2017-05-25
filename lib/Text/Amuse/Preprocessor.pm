@@ -402,20 +402,21 @@ sub _read_file {
 sub _set_infile {
     my $self = shift;
     my $input = $self->input;
+    my $infile = File::Spec->catfile($self->tmpdir, 'input.txt');
     if (my $ref = ref($input)) {
         if ($ref eq 'SCALAR') {
-            my $infile = File::Spec->catfile($self->tmpdir, 'input.txt');
             open (my $fh, '>:encoding(UTF-8)', $infile) or die "$infile: $!";
             print $fh $$input;
             close $fh or die "closing $infile $!";
             $self->_infile($infile);
         }
         else {
-            die "not a scalar ref!";
+            die Dumper($ref) . " is not a scalar ref!";
         }
     }
     else {
-        $self->_infile($input);
+        File::Copy::copy($input, $infile) or die "Couldn't copy $input to $infile";
+        $self->_infile($infile);
     }
     return $self->_infile;
 }
