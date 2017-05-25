@@ -7,3 +7,11 @@ Hello [1] there [1] "hullo", 'hullo' [1] [1978]
 
 'Hello' - "there"!!! <verbatim>"Hello" [1]</verbatim>
 [1] three čČč Да поехал
+
+<example>
+[1] Bla "bla"
+<example>
+
+<verbatim>"[50]"</verbatim>
+
+
