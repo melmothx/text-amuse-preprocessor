@@ -16,7 +16,7 @@ BEGIN {
         *eq_or_diff = \&is_deeply;
     }
 }
-my $wd = File::Temp->newdir(CLEANUP => 0);
+my $wd = File::Temp->newdir(CLEANUP => 1);
 my $infile = catfile(qw/t footnotes verbatim-in.muse/);
 my $expected = catfile(qw/t footnotes verbatim-exp.muse/);
 my $outfile = catfile($wd, 'verbatim-in.muse');
