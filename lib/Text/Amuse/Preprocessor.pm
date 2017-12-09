@@ -426,7 +426,7 @@ sub _set_infile {
         }
     }
     else {
-        File::Copy::copy($input, $infile) or die "Couldn't copy $input to $infile";
+        File::Copy::copy($input, $infile) or die "Couldn't copy $input to $infile $!";
         $self->_infile($infile);
     }
     return $self->_infile;
