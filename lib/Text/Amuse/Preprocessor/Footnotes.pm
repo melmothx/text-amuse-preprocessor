@@ -212,6 +212,7 @@ sub process {
             }
         }
     }
+    return;
 }
 
 sub rewrite {
@@ -221,24 +222,49 @@ sub rewrite {
     my $body_fn_counter = 0;
     my @footnotes_found;
     my @references_found;
+    my ($primary, $secondary, $open, $close);
+    if ($type eq 'primary') {
+        ($open, $close) = ('[', ']');
+        $primary = 1;
+    }
+    elsif ($type eq 'secondary') {
+        ($open, $close) = ('{', '}');
+        $secondary = 1;
+    }
+    else {
+        die "$type can only be 'primary' or 'secondary'";
+    }
+    my $start_re = qr{^ \Q$open\E ( [0-9]+ ) \Q$close\E (?=\s) }x;
+    my $inbody_re = qr{ \Q$open\E ( [0-9]+ ) \Q$close\E }x;
+    my $secondary_re = qr{^ \{ [0-9]+ \} (?=\s) }x;
+
+    my $in_footnote = 0;
     while (my $r = <$in>) {
 
         # a footnote
-        if ($r =~ s/^
-                    \[
-                    ([0-9]+)
-                    \]
-                    (?=\s)/_check_and_replace_fn($1,
+        if ($r =~ s/$start_re/_check_and_replace_fn($1,
                                                  \$fn_counter,
-                                                 \@footnotes_found)/xe) {
-            # nothing to do
+                                                 \@footnotes_found, $open, $close)/xe) {
+            $in_footnote = 1;
+        }
+        elsif ($primary and $r =~ m/$secondary_re/) {
+            # entering a secondary footnote. never matched if type is
+            # secondary. Leave them alone.
+            $in_footnote = 1;
+        }
+        # we are in a footnote if there is indentation going on
+        elsif ($in_footnote and $r =~ m/\A(\s{4,})/) {
+            $in_footnote = 1;
+        }
+        elsif ($r =~ m/\A\s*\z/) {
+            # ignore blank lines
         }
         else {
-            $r =~ s/\[
-                    ([0-9]+)
-                    \]/_check_and_replace_fn($1,
+            # not a continuation, not blank
+            $in_footnote = 0;
+            $r =~ s/$inbody_re/_check_and_replace_fn($1,
                                              \$body_fn_counter,
-                                             \@references_found)/gxe;
+                                             \@references_found, $open, $close)/gxe;
         }
         print $out $r;
     }
@@ -250,24 +276,24 @@ sub rewrite {
                            references => $body_fn_counter,
                            footnotes => $fn_counter,
                            references_found => join(" ",
-                                                    map { "[$_]" }
+                                                    map { $open . $_ . $close }
                                                     @references_found),
                            footnotes_found  => join(" ",
-                                                     map { "[$_]" }
-                                                     @footnotes_found),
+                                                    map { $open . $_ . $close }
+                                                    @footnotes_found),
                           });
         return;
     }
 }
 
 sub _check_and_replace_fn {
-    my ($number, $current, $list) = @_;
+    my ($number, $current, $list, $open, $close) = @_;
     if ($number < ($$current + 100)) {
         push @$list, $number;
-        return '[' . ++$$current . ']';
+        return $open . ++$$current . $close;
     }
     else {
-        return '[' . $number . ']';
+        return $open . $number . $close;
     }
 
 }
