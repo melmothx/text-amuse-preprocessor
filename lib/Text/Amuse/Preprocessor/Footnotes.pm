@@ -177,15 +177,45 @@ sub process {
     # auxiliary files
     my $tmpdir = $self->tmpdir;
     print "Using $tmpdir\n" if $self->debug;
-    my $auxfile  = File::Spec->catfile($tmpdir, 'fixed.muse');
-    # open the auxiliary file
+
+    # if you're wondering, we are doing all this with file streams to
+    # avoid reading the whole document in memory
+
+    my $auxfile  = File::Spec->catfile($tmpdir, 'primary.muse');
+    my $infile = $self->input;
+    open (my $in, '<:encoding(UTF-8)', $infile)
+      or die ("can't open $infile $!");
     open (my $out, '>:encoding(UTF-8)', $auxfile)
       or die ("can't open $auxfile $!");
 
-    my $infile   = $self->input;
-    open (my $in, '<:encoding(UTF-8)', $infile)
-      or die ("can't open $infile $!");
-    
+
+    if ($self->rewrite(primary => $in, $out)) {
+        close $in  or die $!;
+        close $out or die $!;
+
+        my $sec_auxfile  = File::Spec->catfile($tmpdir, 'secondary.muse');
+        open (my $sec_in, '<:encoding(UTF-8)', $auxfile)
+          or die ("can't open $auxfile $!");
+        open (my $sec_out, '>:encoding(UTF-8)', $sec_auxfile)
+          or die ("can't open $sec_auxfile $!");
+
+        if ($self->rewrite(secondary => $sec_in, $sec_out)) {
+            close $sec_in  or die $!;
+            close $sec_out or die $!;
+            if (my $outfile = $self->output) {
+                copy $sec_auxfile, $outfile or die "Cannot copy $sec_auxfile to $outfile $!";
+                return $outfile;
+            }
+            else {
+                # dry run, just state success
+                return 1;
+            }
+        }
+    }
+}
+
+sub rewrite {
+    my ($self, $type, $in, $out) = @_;
     # read the file.
     my $fn_counter = 0; 
     my $body_fn_counter = 0;
@@ -212,19 +242,8 @@ sub process {
         }
         print $out $r;
     }
-
-    close $in  or die $!;
-    close $out or die $!;
-
     if ($body_fn_counter == $fn_counter) {
-        if (my $outfile = $self->output) {
-            copy $auxfile, $outfile or die "Cannot copy $auxfile to $outfile $!";
-            return $outfile;
-        }
-        else {
-            # dry run, just state success
-            return 1;
-        }
+        return 1;
     }
     else {
         $self->_set_error({
