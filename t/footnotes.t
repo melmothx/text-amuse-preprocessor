@@ -16,12 +16,17 @@ use File::Spec::Functions qw/catfile catdir/;
 use Text::Amuse::Preprocessor;
 use Text::Amuse::Preprocessor::Footnotes;
 
-use Test::More tests => 20;
+use Test::More tests => 32;
 use Data::Dumper;
 
 my @tests = ([ good => undef ],
-             [ 'good2' => undef ],
-             [ 'good3' => undef ],
+             [ good2 => undef ],
+             [ good3 => undef ],
+
+             [ 'sec-good' => undef ],
+             [ 'sec-good2' => undef ],
+             [ 'sec-good3' => undef ],
+
              [ bad => {
                        references => 3,
                        footnotes => 2,
