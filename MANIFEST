@@ -27,6 +27,10 @@ t/footnotes/good2.in
 t/footnotes/good2.out
 t/footnotes/good3.in
 t/footnotes/good3.out
+t/footnotes/indentation.in
+t/footnotes/indentation.out
+t/footnotes/mixed.in
+t/footnotes/mixed.out
 t/footnotes/sec-good.in
 t/footnotes/sec-good.out
 t/footnotes/sec-good2.in

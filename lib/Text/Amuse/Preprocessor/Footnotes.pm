@@ -236,7 +236,7 @@ sub rewrite {
     }
     my $start_re = qr{^ \Q$open\E ( [0-9]+ ) \Q$close\E (?=\s) }x;
     my $inbody_re = qr{ \Q$open\E ( [0-9]+ ) \Q$close\E }x;
-    my $secondary_re = qr{^ \{ [0-9]+ \} (?=\s) }x;
+    my $secondary_re = qr{^ (\{ [0-9]+ \}) (?=\s) }x;
 
     my $in_footnote = 0;
     while (my $r = <$in>) {
@@ -244,27 +244,27 @@ sub rewrite {
         # a footnote
         if ($r =~ s/$start_re/_check_and_replace_fn($1,
                                                  \$fn_counter,
-                                                 \@footnotes_found, $open, $close)/xe) {
-            $in_footnote = 1;
+                                                 \@footnotes_found, $open, $close, \$in_footnote)/xe) {
         }
         elsif ($primary and $r =~ m/$secondary_re/) {
             # entering a secondary footnote. never matched if type is
             # secondary. Leave them alone.
-            $in_footnote = 1;
-        }
-        # we are in a footnote if there is indentation going on
-        elsif ($in_footnote and $r =~ m/\A(\s{4,})/) {
-            $in_footnote = 1;
+            $in_footnote = length($1) + 1;
         }
         elsif ($r =~ m/\A\s*\z/) {
             # ignore blank lines
+        }
+        # we are in a footnote if there is indentation going on
+        elsif ($in_footnote and $r =~ m/\A(\s{4,})/) {
+            # print "In footnote, shifting indentation on $r\n";
+            $r =~ s/\A(\s{4,})/' ' x $in_footnote/e;
         }
         else {
             # not a continuation, not blank
             $in_footnote = 0;
             $r =~ s/$inbody_re/_check_and_replace_fn($1,
                                              \$body_fn_counter,
-                                             \@references_found, $open, $close)/gxe;
+                                             \@references_found, $open, $close, \$in_footnote)/gxe;
         }
         print $out $r;
     }
@@ -287,15 +287,13 @@ sub rewrite {
 }
 
 sub _check_and_replace_fn {
-    my ($number, $current, $list, $open, $close) = @_;
+    my ($number, $current, $list, $open, $close, $in_footnote) = @_;
     if ($number < ($$current + 100)) {
         push @$list, $number;
-        return $open . ++$$current . $close;
+        $number = ++$$current;
     }
-    else {
-        return $open . $number . $close;
-    }
-
+    $$in_footnote = length($number) + 3;
+    return $open . $number . $close;
 }
 
 1;

@@ -7,7 +7,7 @@ Tešt {1} ciào{2} Huàà&đĐ{3}
 
 {3} Up
 
-Fourth {4} {5}
+Fourth {4} {5} [1]
 
 {4} ciào
 
@@ -15,3 +15,8 @@ Fourth {4} {5}
 
 {9999} Blablabla
 
+[1] Blabla
+
+    Hello {6}
+
+{6} second

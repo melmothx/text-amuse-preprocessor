@@ -16,13 +16,14 @@ use File::Spec::Functions qw/catfile catdir/;
 use Text::Amuse::Preprocessor;
 use Text::Amuse::Preprocessor::Footnotes;
 
-use Test::More tests => 32;
+use Test::More tests => 40;
 use Data::Dumper;
 
 my @tests = ([ good => undef ],
              [ good2 => undef ],
              [ good3 => undef ],
-
+             [ mixed => undef ],
+             [ indentation => undef ],
              [ 'sec-good' => undef ],
              [ 'sec-good2' => undef ],
              [ 'sec-good3' => undef ],
@@ -62,8 +63,8 @@ foreach my $test (@tests) {
     else {
         ok ($ok, "success") or diag Dumper($pp->error);
         ok (!$pp->error);
-        eq_or_diff([split /\n/, Text::Amuse::Preprocessor->_read_file($out)],
-                   [split /\n/, Text::Amuse::Preprocessor->_read_file($expected)],
+        eq_or_diff(Text::Amuse::Preprocessor->_read_file($out),
+                   Text::Amuse::Preprocessor->_read_file($expected),
                    "$out is equal to $expected");
     }
 }
