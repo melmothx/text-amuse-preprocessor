@@ -18,11 +18,11 @@ Text::Amuse::Preprocessor - Helpers for Text::Amuse document formatting.
 
 =head1 VERSION
 
-Version 0.41
+Version 0.50
 
 =cut
 
-our $VERSION = '0.41';
+our $VERSION = '0.50';
 
 
 =head1 SYNOPSIS
