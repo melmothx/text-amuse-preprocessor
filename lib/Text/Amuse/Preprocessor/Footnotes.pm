@@ -81,6 +81,10 @@ Print some additional info.
 Do the job, write out C<output> and return C<output>. On failure, set
 an arror and return false.
 
+=head2 rewrite($type, $fh_in, $fh_out)
+
+Internal method to rewrite the footnotes. Type can be primary or secondary.
+
 =head2 error
 
 Accesso to the error. If there is a error, an hashref with the
