@@ -16,7 +16,7 @@ use File::Spec::Functions qw/catfile catdir/;
 use Text::Amuse::Preprocessor;
 use Text::Amuse::Preprocessor::Footnotes;
 
-use Test::More tests => 40;
+use Test::More tests => 48;
 use Data::Dumper;
 
 my @tests = ([ good => undef ],
@@ -27,6 +27,18 @@ my @tests = ([ good => undef ],
              [ 'sec-good' => undef ],
              [ 'sec-good2' => undef ],
              [ 'sec-good3' => undef ],
+             [ 'sec-bad' => {
+                             references => 2,
+                             footnotes => 1,
+                             references_found => '{3} {3}',
+                             footnotes_found  => '{4}',
+                            }],
+             [ 'sec-bad2' => {
+                             references => 2,
+                             footnotes => 3,
+                             references_found => '{3} {3}',
+                             footnotes_found  => '{4} {5} {6}',
+                            }],
 
              [ bad => {
                        references => 3,
