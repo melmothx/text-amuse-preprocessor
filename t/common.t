@@ -207,7 +207,7 @@ MUSE
     my $nl_out = <<'MUSE';
 #lang nl
 
-„this and ‚that’ – and a dash.”
+“this and ‘that’ – and a dash.”
 MUSE
     test_strings("Nl quotation", $nl_in, $nl_out, 1, 1, 1, 1);
 }
