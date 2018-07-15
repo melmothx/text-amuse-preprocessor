@@ -320,13 +320,16 @@ sub _span_process_attr {
 
 sub _pars_process_attr {
   my ($tag, $attr) = @_;
-# warn Dumper($attr);
+  # warn Dumper($attr);
   if (my $style = $attr->{style}) {
     if ($style =~ m/text-align:\s*center/i) {
       $tag = 'center';
     }
     if ($style =~ m/text-align:\s*right/i) {
       $tag = 'right';
+    }
+    if ($style =~ m/padding-left:\s*\d/si) {
+      $tag = 'blockquote'
     }
   }
   if (my $align = $attr->{align}) {
