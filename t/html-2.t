@@ -4,7 +4,7 @@ use utf8;
 
 use File::Temp;
 use Data::Dumper;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 BEGIN {
     if (!eval q{ use Test::Differences; 1 }) {
@@ -38,6 +38,38 @@ The drama off stage.
 </quote>
 
 Many in the audience were horrified.
+
+MUSE
+    eq_or_diff(html_to_muse($in), $out);
+}
+
+{
+    my $in = <<'HTML';
+<h4>test</h4>
+You&#8217;re there camping in the cemetery<br /> long black hair in tangles ghostwhite face
+<span id="more-5764"></span></p>
+<p style="text-align: center;">* * *</p>
+<p>Sion County is remote, rural, and poor, and always has been.</p>
+<p />
+* <a href="test">Test</a>
+<p />
+HTML
+
+    my $out = <<'MUSE';
+
+*** test
+
+You’re there camping in the cemetery
+
+long black hair in tangles ghostwhite face
+
+<center>
+ * * *
+</center>
+
+Sion County is remote, rural, and poor, and always has been.
+
+ * [[test][Test]]
 
 MUSE
     eq_or_diff(html_to_muse($in), $out);

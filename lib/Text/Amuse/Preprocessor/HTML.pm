@@ -298,6 +298,7 @@ sub _cleanup_text_block {
   $parsed =~ s/\s+/ /gs;
   $parsed =~ s/\A\s+//;
   $parsed =~ s/\s+\z//;
+  $parsed =~ s/^\*/ */gm;
   # print ">>>$parsed<<<\n";
   return $parsed;
 }
