@@ -14,7 +14,7 @@ our @ISA = qw(Exporter);
 
 our @EXPORT_OK = qw( html_to_muse html_file_to_muse );
 
-our $VERSION = '0.27';
+our $VERSION = '0.55';
 
 =encoding utf8
 
