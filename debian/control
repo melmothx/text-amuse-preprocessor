@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Marco Pessotto <melmothx@gmail.com>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: libhtml-parser-perl,
+ libtext-diff-perl,
  libio-html-perl (>= 1),
  libpod-simple-wiki-perl (>= 0.19),
  libtext-amuse-perl (>= 0.95),
@@ -15,6 +16,7 @@ Package: libtext-amuse-preprocessor-perl
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
  libhtml-parser-perl,
+ libtext-diff-perl,
  libio-html-perl (>= 1),
  libpod-simple-wiki-perl (>= 0.19),
  libtext-amuse-perl (>= 0.95)
