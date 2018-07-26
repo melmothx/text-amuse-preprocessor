@@ -558,7 +558,7 @@ sub tmpdir {
 sub _get_lang {
     my $self = shift;
     my $infile = $self->_infile;
-    # shoudn't happen
+    # shouldn't happen
     die unless $infile && -f $infile;
     my $info;
     eval {
