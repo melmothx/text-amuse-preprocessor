@@ -70,7 +70,7 @@ The input file. It must exists.
 =head3 output
 
 The output file. It will be written by the module if the parsing
-succeedes. If not specified, the module will run in dry-run mode.
+succeeds. If not specified, the module will run in dry-run mode.
 
 =head3 debug
 
