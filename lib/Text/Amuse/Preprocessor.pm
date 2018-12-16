@@ -336,9 +336,6 @@ sub process {
         if ($remove_nbsp) {
             $line =~ s/\x{a0}/ /g;
         }
-        elsif ($show_nbsp) {
-            $line =~ s/\x{a0}/~~/g;
-        }
         if ($fixtypo) {
             $line =~ s/(?<=\.) (?=\.)//g; # collapse the dots
         }
@@ -353,6 +350,9 @@ sub process {
         }
         if ($nbsp_filter) {
             $line = $nbsp_filter->($line);
+        }
+        if ($show_nbsp) {
+            $line =~ s/\x{a0}/~~/g;
         }
         print $auxfh $line;
     }
