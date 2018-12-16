@@ -335,6 +335,7 @@ sub process {
         $line =~ s/\x{ad}\s*//g;
         if ($remove_nbsp) {
             $line =~ s/\x{a0}/ /g;
+            $line =~ s/~~/ /g;
         }
         elsif ($show_nbsp) {
             $line =~ s/\x{a0}/~~/g;

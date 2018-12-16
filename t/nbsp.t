@@ -21,6 +21,7 @@ my $in = <<'MUSE';
 
  hello  there
 
+~~hello~~~~there
 MUSE
 
 {
@@ -35,6 +36,7 @@ MUSE
 
 ~~hello~~~~there
 
+~~hello~~~~there
 MUSE
     my $out;
 
@@ -57,6 +59,7 @@ MUSE
 
  hello  there
 
+ hello  there
 MUSE
     my $out;
 
