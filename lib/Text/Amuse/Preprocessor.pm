@@ -590,8 +590,8 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Text::Amuse::Preprocessor
 
-Repository available at Gitorious:
-L<https://gitorious.org/text-amuse-preprocessor>
+Repository available at GitHub:
+L<https://github.com/melmothx/text-amuse-preprocessor>
 
 =head1 SEE ALSO
 
