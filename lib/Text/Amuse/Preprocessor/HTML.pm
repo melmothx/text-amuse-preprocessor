@@ -72,9 +72,7 @@ my %preserved = (
 		 "strike" => [["<del>"], ["</del>"]],
 		 "del" => [["<del>"], ["</del>"]],
 		 "p" => ["\n\n", "\n\n"],
-		 "br" => ["\n\n", "\n\n"], # if you're asking why, a
-                                           # lot of pages use the br
-                                           # as a <p>
+		 "br" => ["\n<br>", "\n"],
 		 "div" => ["\n\n", "\n\n"],
 		 "center" => ["\n\n<center>\n", "\n</center>\n\n"],
 		 "right"  => ["\n\n<right>\n", "\n</right>\n\n"],
