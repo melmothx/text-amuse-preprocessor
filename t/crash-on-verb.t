@@ -1,6 +1,4 @@
 #!perl
-
-#!perl
 use utf8;
 use strict;
 use warnings;
@@ -34,5 +32,3 @@ MUSE
     diag $output;
 }
 
-
-my $inp
