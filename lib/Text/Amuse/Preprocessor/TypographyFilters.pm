@@ -433,7 +433,7 @@ sub nbsp_filter {
                          qr/(?<=\S)
                             \s+
                             \Q$token\E
-                            (?=\W)/x,
+                            (?=\W|$)/xm,
                          "\x{a0}$token"
                         ];
     }
@@ -442,8 +442,8 @@ sub nbsp_filter {
                          qr/(?<=\d)
                             \s+
                             \Q$token\E
-                            (?=\W)
-                           /x,
+                            (?=\W|$)
+                           /xm,
                          "\x{a0}$token"
                         ];
     }
@@ -452,8 +452,8 @@ sub nbsp_filter {
                          qr/\b
                             \Q$token\E
                             \s+
-                            (?=\S)
-                           /x,
+                            (?=\S|$)
+                           /xm,
                          "$token\x{a0}"
                         ];
     }
