@@ -24,7 +24,11 @@ for (1,2) {
 #title The Text::Amuse markup manual
 #lang en
 
-If you need <verbatim>[10]</verbatim> to start a line with an hash, wrap it in =<verbatim>= E.g.
+<verbatim>
+"here"
+</verbatim>
+
+If you need <verbatim>[10]</verbatim> to =here we 'go' test= start a line with an hash, wrap it in =<verbatim>= E.g.
 
 {{{
 #hashtag verbatim.
@@ -50,7 +54,11 @@ MUSE
 #title The Text::Amuse markup manual
 #lang en
 
-If you need <verbatim>[10]</verbatim> to start a line with an hash, wrap it in =<verbatim>= E.g.
+<verbatim>
+"here"
+</verbatim>
+
+If you need <verbatim>[10]</verbatim> to =here we 'go' test= start a line with an hash, wrap it in =<verbatim>= E.g.
 
 {{{
 #hashtag verbatim.
