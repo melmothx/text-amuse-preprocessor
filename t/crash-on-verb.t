@@ -31,13 +31,19 @@ If you need <verbatim>[10]</verbatim> to start a line with an hash, wrap it in =
 =#hashtag= verbatim as code.
 }}}
 
-"Yielding":
+"Yielding": [4]
 
 <verbatim>#hashtag 'hash'</verbatim> verbatim.
 
 <example>
-x
+"x" '[3]'
+
+[1] 'test' "test" l'albero
 </example>
+
+[4] Real "footnote" {5}
+
+{6} "Hellow"
 MUSE
 
     my $expected = <<'MUSE';
@@ -51,13 +57,19 @@ If you need <verbatim>[10]</verbatim> to start a line with an hash, wrap it in =
 =#hashtag= verbatim as code.
 }}}
 
-“Yielding”:
+“Yielding”: [1]
 
 <verbatim>#hashtag 'hash'</verbatim> verbatim.
 
 <example>
-x
+"x" '[3]'
+
+[1] 'test' "test" l'albero
 </example>
+
+[1] Real “footnote” {1}
+
+{1} “Hellow”
 MUSE
     my $output = '';
     my @parsed = Text::Amuse::Preprocessor::Parser::parse_text($input);
@@ -65,10 +77,11 @@ MUSE
     my $pp = Text::Amuse::Preprocessor->new(
                                             input => \$input,
                                             output => \$output,
-                                            debug => 1,
+                                            debug => 0,
                                             fix_links => 1,
                                             fix_typography => 1,
-                                            fix_nbsp => 0,
+                                            fix_nbsp => 1,
+                                            fix_footnotes  => 1,
                                            )->process;
     ok $output;
     eq_or_diff($output, $expected);
@@ -76,5 +89,4 @@ MUSE
 
 {
     my @parsed = Text::Amuse::Preprocessor::Parser::parse_text(Text::Amuse::Preprocessor->_read_file('t/footnotes/verbatim-in.muse'));
-    diag Dumper(\@parsed);
 }
