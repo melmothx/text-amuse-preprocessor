@@ -288,9 +288,19 @@ sub _english_specific {
     return $l;
 }
 
+sub _chinese_specific {
+    my $l = shift;
+    # regexps goes here
+    # $l =~ s/in/out/g;
+
+    # and return the string
+    return $l;
+}
+
 sub specific_filters {
     return {
             en => \&_english_specific,
+            zh => \&_chinese_specific,
            };
 }
 

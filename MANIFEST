@@ -16,6 +16,7 @@ README
 t/00-load.t
 t/changes.t
 t/chars.t
+t/chinese.t
 t/common.t
 t/crash-on-verb.t
 t/crash_on_loop.t
