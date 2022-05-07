@@ -313,7 +313,7 @@ Return the specific filter for lang, if present.
 sub specific_filter {
     my ($lang) = @_;
     return unless $lang;
-    return specific_filters->{$lang};
+    return $specific_filters->{$lang};
 }
 
 =head2 filter($lang)
