@@ -46,6 +46,7 @@ t/footnotes/verbatim-exp.muse
 t/footnotes/verbatim-in.muse
 t/html-2.t
 t/html.t
+t/links.t
 t/manifest.t
 t/memory-cycles.t
 t/nbsp.t
