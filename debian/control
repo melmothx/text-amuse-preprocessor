@@ -2,14 +2,14 @@ Source: libtext-amuse-preprocessor-perl
 Section: perl
 Priority: optional
 Maintainer: Marco Pessotto <melmothx@gmail.com>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper-compat (= 13)
 Build-Depends-Indep: libhtml-parser-perl,
  libtext-diff-perl,
  libio-html-perl (>= 1),
  libpod-simple-wiki-perl (>= 0.19),
  libtext-amuse-perl (>= 0.95),
  perl
-Standards-Version: 3.9.6
+Standards-Version: 4.5.1
 Homepage: https://metacpan.org/release/Text-Amuse-Preprocessor
 
 Package: libtext-amuse-preprocessor-perl

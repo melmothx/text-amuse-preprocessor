@@ -1,3 +1,9 @@
+libtext-amuse-preprocessor-perl (0.67-2) unstable; urgency=medium
+
+  * Rebuilt
+
+ -- Marco Pessotto <melmothx@gmail.com>  Tue, 07 Apr 2026 16:47:15 +0200
+
 libtext-amuse-preprocessor-perl (0.67-1+amw1) unstable; urgency=medium
 
   * New release
